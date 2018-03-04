@@ -1,0 +1,128 @@
+import React from 'react';
+var convert = require('xml-js');
+
+const API_URL = 'https://www.lcpro.it/lcpro/appl/mybar_01/web_services/ws1.asmx';
+const TOKEN = 'eT.dfaR34lkfdopiAswriozx:dsjhkj.\\39878\\deoiuoi';
+
+function getHeadersForRequestType(requestType) {
+    var headers = new Headers();
+    headers.append('Host', 'www.lcpro.it');
+    headers.append('Content-Type', 'text/xml; charset=utf-8');
+    headers.append('SOAPAction', 'http://lcpro.it/' + requestType);
+    return headers;
+}
+
+function getBodyForRequestType(requestType, params = null) {
+    var body = {
+        "_declaration": {
+            "_attributes": {
+                "version": "1.0",
+                "encoding": "utf-8"
+            }
+        },
+        "soap:Envelope": {
+            "_attributes": {
+                "xmlns:xsi":  "http://www.w3.org/2001/XMLSchema-instance",
+                "xmlns:xsd":  "http://www.w3.org/2001/XMLSchema",
+                "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+            },
+            "soap:Body": {
+                [requestType]: {
+                    "_attributes": {
+                        "xmlns": "http://lcpro.it/"
+                    },
+                    "c_token": {
+                        "_text": TOKEN
+                    }
+                }
+            }
+        }
+    };
+
+    if (params) {
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                body['soap:Envelope']['soap:Body'][requestType][key] = params[key];
+            }
+        }
+    }
+
+    return body;
+}
+
+async function call(headers, body) {
+    try {
+        var result = await fetch(API_URL, {
+            method: 'POST',
+            headers: headers,
+            body: body
+        });
+
+        result = JSON.parse(convert.xml2json(result._bodyText, {compact: true, spaces: 4}));
+
+        return result;
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function putOrder(order) {
+    var requestType = 'put_ordine';
+
+    var headers = getHeadersForRequestType(requestType);
+    var body = getBodyForRequestType(requestType, order);
+
+    var options = {ignoreComment: true, spaces: 4, compact: true};
+    var xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    var result = await call(headers, xmlBody);
+}
+
+async function getList(itemName, params = null) {
+    var requestType = 'get_lista_' + itemName;
+
+    var headers = getHeadersForRequestType(requestType);
+    var body = getBodyForRequestType(requestType, params);
+
+    var options = {ignoreComment: true, spaces: 4, compact: true};
+    var xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    return await call(headers, xmlBody);
+}
+
+async function getCategoriesList() {
+    return await getList('categorie');
+}
+
+export async function getProductsList() {
+    var result = await getList('prodotti');
+    result = result['soap:Envelope']['soap:Body']['get_lista_prodottiResponse']['get_lista_prodottiResult']['Prodotti'];
+    return result;
+}
+
+async function getTimeSlotsList() {
+    return await getList('fasce_orarie');
+}
+
+async function getNewsList() {
+    return await getList('novita');
+}
+
+async function getProductsListByCat(category) {
+    return await getList('prodotti_bycat', {'n_id_categoria': category});
+}
+
+async function getSuggestedProductsList(orders) {
+    var ordersList;
+
+    orders.foreach((value) => {
+        ordersList.append({ 'int': value });
+    });
+
+    return await getList('prodotti_suggeriti', {'lista_id_prodotti_acquistati': ordersList});
+}
