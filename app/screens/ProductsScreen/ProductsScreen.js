@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import {
   Platform,
-  StyleSheet,
   Text,
   View,
   SectionList,
   Image
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import Button from '../../components/Button/Button'
-var settings = require('../../config/settings')
+import Button from '../../components/Button/Button';
+import styles from './styles';
+const settings = require('../../config/settings');
 
 export default class ProductsScreen extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             sections: []
         };
@@ -69,39 +70,3 @@ export default class ProductsScreen extends Component {
       );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-     flex: 1,
-     paddingTop: 22
-    },
-    sectionHeader: {
-      paddingTop: 2,
-      paddingLeft: 10,
-      paddingRight: 10,
-      paddingBottom: 2,
-      fontSize: 14,
-      fontWeight: 'bold',
-      backgroundColor: 'rgba(247,247,247,1.0)',
-    },
-    itemContainer: {
-        padding: 10,
-        flex: 3,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    itemButton: {
-        width: 30,
-        height: 30,
-        margin: 2.5,
-        backgroundColor: 'rgba(220, 220, 220, 1.0)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 2
-    },
-    item: {
-      padding: 10,
-      fontSize: 14,
-    },
-  })
