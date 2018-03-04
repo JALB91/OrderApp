@@ -58,27 +58,13 @@ async function call(headers, body) {
             body: body
         });
 
-        result = JSON.parse(convert.xml2json(result._bodyText, {compact: true, spaces: 4}));
+        result = JSON.parse(convert.xml2json(result._bodyText, {compact: true, spaces: 4, nativeType: true}));
 
         return result;
 
     } catch (error) {
         console.error(error);
     }
-}
-
-async function putOrder(order) {
-    var requestType = 'put_ordine';
-
-    var headers = getHeadersForRequestType(requestType);
-    var body = getBodyForRequestType(requestType, order);
-
-    var options = {ignoreComment: true, spaces: 4, compact: true};
-    var xmlBody = convert.js2xml(body, options);
-
-    headers.append('Content-Length', xmlBody.length);
-
-    var result = await call(headers, xmlBody);
 }
 
 async function getList(itemName, params = null) {
@@ -95,8 +81,36 @@ async function getList(itemName, params = null) {
     return await call(headers, xmlBody);
 }
 
-async function getCategoriesList() {
-    return await getList('categorie');
+export async function putOrder(order) {
+    var requestType = 'put_ordine';
+
+    var headers = getHeadersForRequestType(requestType);
+    var body = getBodyForRequestType(requestType, order);
+
+    var options = {ignoreComment: true, spaces: 4, compact: true};
+    var xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    var result = await call(headers, xmlBody);
+}
+
+export async function getCategoriesList() {
+    var result = await getList('categorie');
+    result = result['soap:Envelope']['soap:Body']['get_lista_categorieResponse']['get_lista_categorieResult']['Categorie'];
+
+    var list = [];
+
+    result.forEach((element) => {
+        var product = {
+            'cat': element['C_DESCRI']['_text'],
+            'idCat': element['N_ID']['_text']
+        }
+
+        list.push(product);
+    });
+
+    return list;
 }
 
 export async function getProductsList() {
@@ -122,24 +136,55 @@ export async function getProductsList() {
     return list;
 }
 
-async function getTimeSlotsList() {
-    return await getList('fasce_orarie');
+export async function getTimeSlotsList() {
+    var result = await getList('fasce_orarie');
+    result = result['soap:Envelope']['soap:Body']['get_lista_fasce_orarieResponse']['get_lista_fasce_orarieResult'];
+
+    console.log(result);
+
+    var list = [];
+
+    result.forEach((element) => {
+        var product = {
+            'cat': element['C_DESCRI']['_text'],
+            'idCat': element['N_ID']['_text']
+        }
+
+        list.push(product);
+    });
+
+    return list;
 }
 
-async function getNewsList() {
-    return await getList('novita');
+export async function getNewsList() {
+    var result = await getList('novita');
+    result = result['soap:Envelope']['soap:Body']['get_lista_novitaResponse']['get_lista_novitaResult'];
+
+    var list = [];
+
+    if (result.constructor !== Array) return list;
+
+    result.forEach((element) => {
+        var product = {
+            'idProd': element['prod']['N_ID']['_text'],
+        }
+
+        list.push(product);
+    });
+
+    return list;
 }
 
-async function getProductsListByCat(category) {
+export async function getProductsListByCat(category) {
     return await getList('prodotti_bycat', {'n_id_categoria': category});
 }
 
-async function getSuggestedProductsList(orders) {
+export async function getSuggestedProductsList(orders) {
     var ordersList;
 
     orders.foreach((value) => {
         ordersList.append({ 'int': value });
     });
 
-    return await getList('prodotti_suggeriti', {'lista_id_prodotti_acquistati': ordersList});
+    return await getList('prodotti_suggeriti', { 'lista_id_prodotti_acquistati': ordersList });
 }
