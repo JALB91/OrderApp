@@ -102,7 +102,24 @@ async function getCategoriesList() {
 export async function getProductsList() {
     var result = await getList('prodotti');
     result = result['soap:Envelope']['soap:Body']['get_lista_prodottiResponse']['get_lista_prodottiResult']['Prodotti'];
-    return result;
+
+    var list = [];
+
+    result.forEach((element) => {
+        var product = {
+            'cat': element['C_CATEGORIA']['_text'],
+            'descr': element['C_DESCRI']['_text'],
+            'imgUri': 'data:' + element['C_IMAGE_TYPE']['_text'] + ';base64,' + element['N_BYTEARRAY_IMAGE']['_text'],
+            'idProd': element['N_ID']['_text'],
+            'idCat': element['N_ID_CAT']['_text'],
+            'price': element['N_IMPORTO']['_text'],
+            'points': element['N_PUNTI']['_text']
+        }
+
+        list.push(product);
+    });
+
+    return list;
 }
 
 async function getTimeSlotsList() {
