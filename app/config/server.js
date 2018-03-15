@@ -1,3 +1,18 @@
+/*
+    Products structure
+    <N_ID_PRODOTTO>int</N_ID_PRODOTTO>
+    <C_CATEGORIA>string</C_CATEGORIA>
+    <B_IS_NOVITA>boolean</B_IS_NOVITA>
+    <C_DESCRIZIONE_NOVITA>string</C_DESCRIZIONE_NOVITA>
+    <C_DESCRIZIONE_PRODOTTO>string</C_DESCRIZIONE_PRODOTTO>
+    <N_IMPORTO>double</N_IMPORTO>
+    <N_PUNTI>int</N_PUNTI>
+    <N_BYTEARRAY_IMAGE>base64Binary</N_BYTEARRAY_IMAGE>
+    <C_IMAGE_TYPE>string</C_IMAGE_TYPE>
+    <C_NOTE>string</C_NOTE>
+*/
+
+
 import React from 'react';
 const convert = require('xml-js');
 const config = require('./config');
@@ -79,6 +94,27 @@ async function getList(itemName, params = null) {
     return await call(headers, xmlBody);
 }
 
+export async function login(username, password) {
+    const requestType = 'login';
+
+    let headers = getHeadersForRequestType(requestType);
+    const body = getBodyForRequestType(requestType, { username, password });
+
+    const options = {ignoreComment: true, spaces: 4, compact: true};
+    const xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    try {
+        const result = await call(headers, xmlBody);
+        return result['soap:Envelope']['soap:Body']['loginResponse']['loginResult']['_text'];
+    }
+    catch(e) {
+        console.log(e);
+        return 0;
+    }
+}
+
 export async function putOrder(order) {
     const requestType = 'put_ordine';
 
@@ -115,18 +151,34 @@ export async function getProductsList() {
     let result = await getList('prodotti');
     result = result['soap:Envelope']['soap:Body']['get_lista_prodottiResponse']['get_lista_prodottiResult']['Prodotti'];
 
+    const prototype = {
+        'id': 'N_ID_PRODOTTO',
+        'cat': 'C_CATEGORIA',
+        'isNew': 'B_IS_NOVITA',
+        'newsDescr': 'C_DESCRIZIONE_NOVITA',
+        'descr': 'C_DESCRIZIONE_PRODOTTO',
+        'price': 'N_IMPORTO',
+        'image': 'N_BYTEARRAY_IMAGE',
+        'imageType': 'C_IMAGE_TYPE',
+        'notes': 'C_NOTE'
+    };
     let list = [];
 
     result.forEach((element) => {
         const product = {
-            'cat': element['C_CATEGORIA']['_text'],
-            'descr': element['C_DESCRI']['_text'],
-            'imgUri': 'data:' + element['C_IMAGE_TYPE']['_text'] + ';base64,' + element['N_BYTEARRAY_IMAGE']['_text'],
-            'idProd': element['N_ID']['_text'],
-            'idCat': element['N_ID_CAT']['_text'],
-            'price': element['N_IMPORTO']['_text'],
-            'points': element['N_PUNTI']['_text']
-        }
+            getImageUri: function() {
+                if (this.hasOwnProperty('image') && this.hasOwnProperty('imageType')) {
+                    return 'data:' + this['imageType'] + ';base64,' + this['image'];
+                }
+                return '';
+            }
+        };
+        
+        Object.keys(prototype).forEach(key => {
+            if (element.hasOwnProperty(prototype[key]) && element[prototype[key]].hasOwnProperty('_text')) {
+                product[key] = element[prototype[key]]['_text'];
+            }
+        });
 
         list.push(product);
     });
