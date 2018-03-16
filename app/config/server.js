@@ -107,7 +107,7 @@ export async function login(username, password) {
 
     try {
         const result = await call(headers, xmlBody);
-        return result['soap:Envelope']['soap:Body']['loginResponse']['loginResult']['_text'];
+        return result['soap:Envelope']['soap:Body']['loginResponse']['loginResult']['N_ID']['_text'];
     }
     catch(e) {
         console.log(e);
@@ -131,7 +131,7 @@ export async function putOrder(order) {
 
 export async function getCategoriesList() {
     let result = await getList('categorie');
-    result = result['soap:Envelope']['soap:Body']['get_lista_categorieResponse']['get_lista_categorieResult']['Categorie'];
+    result = result['soap:Envelope']['soap:Body']['get_lista_categorieResponse']['get_lista_categorieResult']['Categoria_prodotto'];
 
     let list = [];
 
@@ -149,7 +149,7 @@ export async function getCategoriesList() {
 
 export async function getProductsList() {
     let result = await getList('prodotti');
-    result = result['soap:Envelope']['soap:Body']['get_lista_prodottiResponse']['get_lista_prodottiResult']['Prodotti'];
+    result = result['soap:Envelope']['soap:Body']['get_lista_prodottiResponse']['get_lista_prodottiResult']['Prodotto'];
 
     const prototype = {
         'id': 'N_ID_PRODOTTO',

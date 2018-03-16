@@ -1,41 +1,54 @@
 import { AsyncStorage } from 'react-native';
+const server = require('../config/server');
 
 class User {
     constructor() {
-        this.username = AsyncStorage.getItem('username').then(result => { return result; }, () => { return ''; });
-        this.password = AsyncStorage.getItem('password').then(result => { return result; }, () => { return ''; });
-        this.user_id = AsyncStorage.getItem('user_id').then(result => { return result; }, () => { return 0; });
+        this.username = '';
+        this.password = '';
+        this.user_id = 0;
+    }
+
+    async fetchData() {
+        try {
+            await AsyncStorage.multiGet(['username', 'password']).then(ret => {
+                this.username = ret[0][1] || '';
+                this.password = ret[1][1] || '';
+            }).catch(err => {
+                console.warn(err.message);
+            });
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
+    async init() {
+        await this.fetchData();
+        await server.login(this.username, this.password).then(result => {
+            this.user_id = result || 0;
+        }, function(reason) {
+            console.warn(reason);
+        });
+
+        return this.isLoggedIn();
     }
 
     isLoggedIn() {
         return this.user_id > 0;
     }
 
-    setUserID(user_id) {
-        AsyncStorage.setItem('user_id', user_id);
+    setUserID(user_id = 0) {
         this.user_id = user_id;
     }
 
-    setUsername(username) {
-        AsyncStorage.setItem('username', username);
+    setUserData(username, password) {
+        AsyncStorage.setItem('username', username).catch(err => {
+            console.warn('Error saving: ' + err);
+        });
+        AsyncStorage.setItem('password', password).catch(err => {
+            console.warn('Error saving: ' + err);
+        });
         this.username = username;
-    }
-
-    setPassword(password) {
-        AsyncStorage.setItem('password', password);
         this.password = password;
-    }
-
-    async getUserID() {
-        return this.user_id;
-    }
-
-    async getUsername() {
-        return await AsyncStorage.getItem('username');
-    }
-
-    async getPassword() {
-        return await AsyncStorage.getItem('password');
     }
 }
 
