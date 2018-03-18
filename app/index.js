@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
 import { StackNavigator } from 'react-navigation';
-import HomeScreen from './screens/HomeScreen/HomeScreen';
-import ProductsScreen from './screens/ProductsScreen/ProductsScreen';
-import OrdersScreen from './screens/OrdersScreen/OrdersScreen';
+import HomeScreen from './screens/HomeScreen';
+import ProductsScreen from './screens/ProductsScreen';
+import MenusScreen from './screens/MenusScreen';
+import OrdersScreen from './screens/OrdersScreen';
+import CartScreen from './screens/CartScreen';
 
 const Navigator = StackNavigator({
     Home: HomeScreen,
     Products: ProductsScreen,
-    Orders: OrdersScreen
-}
-);
+    Menus: MenusScreen,
+    Orders: OrdersScreen,
+    Cart: CartScreen
+}, {
+    navigationOptions: {
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        }
+    }
+});
 
 export default class App extends Component {
     constructor(props) {

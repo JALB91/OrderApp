@@ -6,16 +6,16 @@ import {
     SectionList,
     Image
 } from 'react-native';
-import Button from '../../components/Button/Button';
+import Product from '../../components/Product';
+import Button from '../../components/Button';
+import Cart from '../../components/Cart';
 import styles from './styles';
-import Utils from '../../utils/utils';
-const server = require('../../config/server');
+import utils from '../../utils';
+import * as server from '../../config/server';
 
 export default class ProductsScreen extends Component {
     constructor(props) {
         super(props);
-
-        console.log(Utils.data);
 
         this.state = {
             sections: []
@@ -32,6 +32,27 @@ export default class ProductsScreen extends Component {
         }.bind(this), function(reason) {
             console.error(reason);
         });
+    }
+
+    static navigationOptions = ({navigation}) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title: 'Products',
+            headerRight: (
+                <Cart onPress={params.goToCart} /> 
+            )
+        }
+    }
+
+    componentWillMount() {
+        this.props.navigation.setParams({
+            goToCart: this.goToCart.bind(this)
+        });
+    }
+
+    goToCart() {
+        this.props.navigation.navigate('Cart');
     }
 
     updateCategoriesList(categories) {
@@ -51,7 +72,6 @@ export default class ProductsScreen extends Component {
     updateProductsList(products) {
         let sections = this.state.sections;
         products.forEach(product => {
-            product.quantity = 0;
             
             const section = sections.find(section => {
                 return section.title === product.cat;
@@ -78,35 +98,18 @@ export default class ProductsScreen extends Component {
             <View style={styles.container}>
                 <SectionList
                     sections={this.state.sections}
-                    renderItem= {
-                        ({item}) =>
-                            <View style={this.isItemActive(item) ? styles.itemContainerActive : styles.itemContainerInactive}>
-                                <View style= {{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }}>
-                                    <Image source= {{ uri: item.getImageUri() }} style= {{ width: 50, height: 50 }} />
-                                    <Image 
-                                        source = {require('../../../assets/new-256.png')}
-                                        style = {item['isNew'] ? { position: 'absolute', top: - 5, left: - 10, width: 20, height: 20 } : { display: 'none' }} />
-                                    <Text style= {styles.item}> {item['descr']} </Text>
-                                </View>
-                                <View style= {{ flex: 2, flexDirection: 'row', justifyContent: 'center' }}>
-                                    <Text style= {styles.item}> ${item['price']} </Text>
-                                </View>
-                                <View style= {{ flex: 0.25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                    <Text> {item['quantity']} </Text>
-                                    <Button style= {styles.itemButton} title= '-' onPress= {() => { item['quantity'] = Math.max(0, item['quantity'] - 1); this.setState(this.state); }}/>
-                                    <Button style= {styles.itemButton} title= '+' onPress= {() => { item['quantity']++; this.setState(this.state); }}/>
-                                </View>
-                            </View>
+                    renderItem= {({item}) =>
+                        utils.renderif(this.isItemActive(item), <Product product={item} />)
                     }
                     renderSectionHeader={({section}) => 
                         <Button 
-                            style={styles.sectionHeader} 
-                            title={section.title} 
-                            titleStyle={styles.titleStyle} 
-                            onPress={() => { 
-                                section.active = !section.active;
-                                this.setState(this.state);
-                            }}
+                        style={styles.sectionHeader}
+                        text={section.title} 
+                        textStyle={styles.titleStyle} 
+                        onPress={() => { 
+                            section.active = !section.active;
+                            this.setState(this.state);
+                        }}
                         />
                     }
                     keyExtractor={(item, index) => index}

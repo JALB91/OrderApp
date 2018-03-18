@@ -4,14 +4,14 @@ import {
     Text,
     View
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
-import Loading from '../../components/Loading/Loading';
-import Login from '../../components/Login/Login';
-import Button from '../../components/Button/Button';
-import Utils from '../../utils/utils';
+import Cart from '../../components/Cart';
+import Loading from '../../components/Loading';
+import Login from '../../components/Login';
+import Button from '../../components/Button';
+import utils from '../../utils';
+import * as server from '../../config/server';
+import user from '../../client/user';
 import styles from './styles';
-import User from '../../client/user';
-const server = require('../../config/server');
 
 
 export default class HomeScreen extends Component {
@@ -19,34 +19,42 @@ export default class HomeScreen extends Component {
         super(props);
 
         this.state = {
-            'ready': false,
-            'logged': false
+            ready: false,
+            logged: false
         };
     }
 
+    static navigationOptions = ({navigation}) => {
+        const params = navigation.state.params || {};
+
+        return {
+            title: 'Home',
+            headerRight: (
+                utils.renderif(params.enableCart, <Cart onPress={params.goToCart} />)
+            )
+        }
+    }
+
+    componentWillMount() {
+        this.props.navigation.setParams({
+            goToCart: this.goToCart.bind(this),
+            enableCart: (this.state.logged && this.state.ready)
+        });
+    }
+
     componentDidMount() {
-        User.init().then(result => {
+        user.init().then(result => {
             this.setState({ready: true, logged: result});
+            this.props.navigation.setParams({
+                enableCart: (this.state.logged && this.state.ready)
+            });
         }, reason => {
             this.setState({ready: true, logged: false});
         });
     }
 
-    getTitle() {
-        return (
-            <Text style = {{ fontSize: 30, margin: 50 }}>Home Screen</Text>
-        )
-    }
-
-    getButton(name) {
-        return (
-            <Button
-                style = {styles.button}
-                onPress = {() => this.props.navigation.navigate(name)} 
-                title = {'Go to ' + name} 
-                titleStyle = {{ fontSize: 18 }}
-            />
-        )
+    goToCart() {
+        this.props.navigation.navigate('Cart');
     }
 
     login(username, password) {
@@ -54,17 +62,34 @@ export default class HomeScreen extends Component {
         server.login(username, password).then(result => {
             this.setState({logged: result ? true : false});
             this.setState({ready: true});
-            User.setUserData(username, password);
-            User.setUserID(logged);
+            user.setUserData(username, password);
+            user.setUserID(logged);
+            this.props.navigation.setParams({
+                enableCart: (this.state.logged && this.state.ready)
+            });
         });
+    }
+
+    getButton(name) {
+        return (
+            <Button
+            style = {styles.button}
+            onPress = {() => this.props.navigation.navigate(name)} 
+            text = {name} 
+            textStyle = {{ fontSize: 18 }}
+            />
+        )
     }
   
     render() {
         return (
-            <View style = {{ flex: 2, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-                { Utils.renderif(!this.state['ready'], <Loading />) }
-                { Utils.renderif(this.state['ready'] && !this.state['logged'], <Login onLogin={this.login.bind(this)} />) }
-                { Utils.renderif(this.state.logged, this.getButton('Products')) }
+            <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
+                { utils.renderif(!this.state.ready, <Loading />) }
+                { utils.renderif(this.state.ready && !this.state.logged, <Login onLogin={this.login.bind(this)} />) }
+                { utils.renderif(this.state.logged, this.getButton('Products')) }
+                { utils.renderif(this.state.logged, this.getButton('Menus')) }
+                { utils.renderif(this.state.logged, this.getButton('Orders')) }
+                { utils.renderif(this.state.logged, this.getButton('Account')) }
             </View>
         );
     }

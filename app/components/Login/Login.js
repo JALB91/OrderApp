@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
-import Button from '../Button/Button';
+import Button from '../Button';
 import styles from './styles';
 
 export default class Login extends Component {
@@ -33,7 +33,7 @@ export default class Login extends Component {
                 />
                 <Button
                 onPress={() => this.props.onLogin(this.state.username, this.state.password)}
-                title='Login'
+                text='Login'
                 />
             </View>
         )

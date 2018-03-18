@@ -14,8 +14,11 @@
 
 
 import React from 'react';
+import * as config from './config';
+import Category from '../client/category';
+import Product from '../client/product';
+import Menu from '../client/menu';
 const convert = require('xml-js');
-const config = require('./config');
 
 function getHeadersForRequestType(requestType) {
     let headers = new Headers();
@@ -131,17 +134,12 @@ export async function putOrder(order) {
 
 export async function getCategoriesList() {
     let result = await getList('categorie');
-    result = result['soap:Envelope']['soap:Body']['get_lista_categorieResponse']['get_lista_categorieResult']['Categoria_prodotto'];
+    result = result['soap:Envelope']['soap:Body']['get_lista_categorieResponse']['get_lista_categorieResult']['Categoria_prodotti'];
 
     let list = [];
 
-    result.forEach((element) => {
-        const product = {
-            'cat': element['C_DESCRI']['_text'],
-            'idCat': element['N_ID']['_text']
-        }
-
-        list.push(product);
+    result.forEach(element => {
+        list.push(new Category(element));
     });
 
     return list;
@@ -151,36 +149,23 @@ export async function getProductsList() {
     let result = await getList('prodotti');
     result = result['soap:Envelope']['soap:Body']['get_lista_prodottiResponse']['get_lista_prodottiResult']['Prodotto'];
 
-    const prototype = {
-        'id': 'N_ID_PRODOTTO',
-        'cat': 'C_CATEGORIA',
-        'isNew': 'B_IS_NOVITA',
-        'newsDescr': 'C_DESCRIZIONE_NOVITA',
-        'descr': 'C_DESCRIZIONE_PRODOTTO',
-        'price': 'N_IMPORTO',
-        'image': 'N_BYTEARRAY_IMAGE',
-        'imageType': 'C_IMAGE_TYPE',
-        'notes': 'C_NOTE'
-    };
+    const list = [];
+
+    result.forEach(element => {
+        list.push(new Product(element));
+    });
+
+    return list;
+}
+
+export async function getMenusList() {
+    let result = await getList('menu');
+    result = result['soap:Envelope']['soap:Body']['get_lista_menuResponse']['get_lista_menuResult']['Menu'];
+
     let list = [];
 
     result.forEach((element) => {
-        const product = {
-            getImageUri: function() {
-                if (this.hasOwnProperty('image') && this.hasOwnProperty('imageType')) {
-                    return 'data:' + this['imageType'] + ';base64,' + this['image'];
-                }
-                return '';
-            }
-        };
-        
-        Object.keys(prototype).forEach(key => {
-            if (element.hasOwnProperty(prototype[key]) && element[prototype[key]].hasOwnProperty('_text')) {
-                product[key] = element[prototype[key]]['_text'];
-            }
-        });
-
-        list.push(product);
+        list.push(new Menu(element));
     });
 
     return list;

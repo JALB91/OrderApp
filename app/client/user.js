@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
-const server = require('../config/server');
+import * as server from '../config/server';
 
-class User {
+class user {
     constructor() {
         this.username = '';
         this.password = '';
@@ -52,4 +52,4 @@ class User {
     }
 }
 
-export default new User;
+export default new user;

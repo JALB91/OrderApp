@@ -1,20 +1,44 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,
+    TouchableOpacity,
     Text,
-    TouchableOpacity
+    Image
 } from 'react-native';
+import PropTypes from 'prop-types';
+import utils from '../../utils';
 
 export default class Button extends Component {
     constructor(props) {
         super(props);
     }
 
+    getText() {
+        return (
+            <Text style={this.props.textStyle}>
+                {this.props.text}
+            </Text>
+        )
+    }
+
+    getImage() {
+        return (
+            <Image
+            source={this.props.imgUri}
+            style={this.props.imgStyle}
+            />
+        )
+    }
+
     render() {
         return (
             <TouchableOpacity style= {this.props.style} onPress= {this.props.onPress}>
-                <Text style= {this.props.titleStyle}> {this.props.title} </Text>
+                { utils.renderif(this.props.text, this.getText()) }
+                { utils.renderif(this.props.imgUri, this.getImage())}
             </TouchableOpacity>
         );
     }
+}
+
+Button.propTypes = {
+    onPress: PropTypes.func
 }
