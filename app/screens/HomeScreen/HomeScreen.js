@@ -58,15 +58,17 @@ export default class HomeScreen extends Component {
     }
 
     login(username, password) {
-        this.setState({'ready': false});
-        server.login(username, password).then(result => {
-            this.setState({logged: result ? true : false});
-            this.setState({ready: true});
-            user.setUserData(username, password);
-            user.setUserID(logged);
+        this.setState({ready: false});
+        server.login(username, password)
+        .then(result => {
+            this.setState({logged: result ? true : false, ready: true});
+            user.setUserData(username, result);
             this.props.navigation.setParams({
                 enableCart: (this.state.logged && this.state.ready)
             });
+        })
+        .catch(reason => {
+            this.setState({ready: true, logged: false});
         });
     }
 

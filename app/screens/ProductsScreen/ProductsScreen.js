@@ -11,6 +11,7 @@ import Button from '../../components/Button';
 import Cart from '../../components/Cart';
 import styles from './styles';
 import utils from '../../utils';
+import cart from '../../client/cart';
 import * as server from '../../config/server';
 
 export default class ProductsScreen extends Component {
@@ -70,9 +71,9 @@ export default class ProductsScreen extends Component {
     }
 
     updateProductsList(products) {
+        cart.products = products;
         let sections = this.state.sections;
         products.forEach(product => {
-            
             const section = sections.find(section => {
                 return section.title === product.cat;
             });

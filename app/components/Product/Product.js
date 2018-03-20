@@ -4,7 +4,7 @@ import {
     Text,
     Image
 } from 'react-native';
-import Button from '../Button';
+import Counter from '../Counter';
 import styles from './styles';
 import cart from '../../client/cart';
 import utils from '../../utils';
@@ -12,10 +12,6 @@ import utils from '../../utils';
 export default class Product extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            quantity: this.props.startingQuantity || 0
-        }
     }
 
     getNewImage() {
@@ -27,16 +23,15 @@ export default class Product extends Component {
         )
     }
 
-    addProduct() {
-        this.state.quantity = Math.min(3, this.state.quantity + 1);
-        this.setState(this.state);
-        cart.addProduct(this.props.product.id);
-    }
-
-    removeProduct() {
-        this.state.quantity = Math.max(0, this.state.quantity - 1);
-        this.setState(this.state);
-        cart.removeProduct(this.props.product.id);
+    getCounter() {
+        return (
+            <Counter
+            startingQuantity={cart.getQuantityForProductID(this.props.product.id)}
+            canIncrease={this.props.canIncrease}
+            onAdd={() => cart.addProduct(this.props.product.id)}
+            onRemove={() => cart.removeProduct(this.props.product.id)}
+            />
+        )
     }
 
     render() {
@@ -50,20 +45,12 @@ export default class Product extends Component {
                 <View style= {{ flex: 2, flexDirection: 'row', justifyContent: 'center' }}>
                     <Text style= {styles.item}> ${this.props.product.price} </Text>
                 </View>
-                <View style= {{ flex: 0.25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                    <Text> {this.state.quantity} </Text>
-                    <Button 
-                    style= {styles.itemButton}
-                    text= '-' 
-                    onPress= {this.removeProduct.bind(this)}
-                    />
-                    <Button 
-                    style= {styles.itemButton} 
-                    text= '+'
-                    onPress= {this.addProduct.bind(this)}
-                    />
-                </View>
+                { this.getCounter() }
             </View>
         );
     }
+}
+
+Product.defaultProps = {
+    canIncrease: true
 }

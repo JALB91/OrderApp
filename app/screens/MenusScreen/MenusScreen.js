@@ -12,6 +12,7 @@ import Cart from '../../components/Cart';
 import styles from './styles';
 import utils from '../../utils';
 import * as server from '../../config/server';
+import cart from '../../client/cart';
 
 export default class MenusScreen extends Component {
     constructor(props) {
@@ -50,9 +51,9 @@ export default class MenusScreen extends Component {
     }
 
     updateMenusList(menus) {
+        cart.menus = menus;
         let sections = this.state.sections;
         menus.forEach(menu => {
-            menu.quantity = 0;
             menu.selected = false;
             sections[0]['data'].push(menu);
         });

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {
-    Platform,
-    StyleSheet,
-    Text,
-    View
+    View,
+    Text
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Cart from '../../components/Cart';
+import utils from '../../utils';
+import styles from './styles';
 
-export default class OrdersScreen extends Component {
+export default class AccountScreen extends Component {
     constructor(props) {
         super(props);
     }
@@ -17,9 +17,9 @@ export default class OrdersScreen extends Component {
         const params = navigation.state.params || {};
 
         return {
-            title: 'Orders',
+            title: 'Account',
             headerRight: (
-                <Cart onPress={params.goToCart} /> 
+                <Cart onPress={params.goToCart} />
             )
         }
     }
@@ -37,8 +37,7 @@ export default class OrdersScreen extends Component {
     render() {
         return (
             <View>
-            
-            </View>    
-        );
+            </View>
+        )
     }
 }

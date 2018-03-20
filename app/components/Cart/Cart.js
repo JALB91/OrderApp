@@ -11,16 +11,23 @@ import utils from '../../utils';
 export default class Cart extends Component {
     constructor(props) {
         super(props);
-        cart.updateCart = this.onCartUpdate.bind(this);
         this.state = {
             total: cart.getTotal()
         }
     }
 
     componentWillUnmount() {
-        cart.updateCart = null;
+        if (cart.listeners.indexOf(this.onCartUpdate)) {
+            cart.listeners.splice(cart.listeners.indexOf(this.onCartUpdate), 1);
+        }
     }
 
+    componentWillMount() {
+        if (!cart.listeners.indexOf(this.onCartUpdate)) {
+            cart.listeners.push(this.onCartUpdate.bind(this));
+        }
+    }
+    
     onCartUpdate() {
         this.setState({total: cart.getTotal()});
     }
@@ -29,7 +36,7 @@ export default class Cart extends Component {
         return (
             <View style={{width: 10, height: 10, borderRadius: 5, backgroundColor: 'red', alignContent: 'center', alignItems: 'center'}}>
                 <Text style={{ fontWeight: 'bold', fontSize: 8, color: 'white' }}>
-                    { cart.getTotal() }
+                    { this.state.total }
                 </Text>
             </View>
         )
@@ -38,7 +45,7 @@ export default class Cart extends Component {
     render() {
         return (
             <View style={{ flex: 1, padding: 25, alignItems: 'center', alignContent: 'center' }}>
-                { utils.renderif(cart.getTotal() > 0, this.getBadge()) }
+                { utils.renderif(this.state.total > 0, this.getBadge()) }
                 <Button
                 imgUri={require('../../../assets/cart.png')}
                 imgStyle={{ width: 25, height: 25 }}

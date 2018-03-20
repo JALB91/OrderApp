@@ -4,6 +4,7 @@ import HomeScreen from './screens/HomeScreen';
 import ProductsScreen from './screens/ProductsScreen';
 import MenusScreen from './screens/MenusScreen';
 import OrdersScreen from './screens/OrdersScreen';
+import AccountScreen from './screens/AccountScreen';
 import CartScreen from './screens/CartScreen';
 
 const Navigator = StackNavigator({
@@ -11,6 +12,7 @@ const Navigator = StackNavigator({
     Products: ProductsScreen,
     Menus: MenusScreen,
     Orders: OrdersScreen,
+    Account: AccountScreen,
     Cart: CartScreen
 }, {
     navigationOptions: {
