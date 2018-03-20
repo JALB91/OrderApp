@@ -9,8 +9,9 @@ import Loading from '../../components/Loading';
 import Login from '../../components/Login';
 import Button from '../../components/Button';
 import utils from '../../utils';
-import * as server from '../../config/server';
 import user from '../../client/user';
+import timeslots from '../../client/timeslots';
+import * as server from '../../config/server';
 import styles from './styles';
 
 
@@ -43,12 +44,18 @@ export default class HomeScreen extends Component {
     }
 
     componentDidMount() {
-        user.init().then(result => {
+        user.init()
+        .then(result => {
             this.setState({ready: true, logged: result});
             this.props.navigation.setParams({
                 enableCart: (this.state.logged && this.state.ready)
             });
-        }, reason => {
+
+            if (this.state.logged) {
+                timeslots.updateTimeSlots();   
+            }
+        })
+        .catch(reason => {
             this.setState({ready: true, logged: false});
         });
     }

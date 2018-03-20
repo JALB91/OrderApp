@@ -15,9 +15,10 @@
 
 import React from 'react';
 import * as config from './config';
-import Category from '../client/category';
-import Product from '../client/product';
-import Menu from '../client/menu';
+import category from '../client/category';
+import product from '../client/product';
+import menu from '../client/menu';
+import { timeslot } from '../client/timeslots';
 const convert = require('xml-js');
 
 function getHeadersForRequestType(requestType) {
@@ -139,7 +140,7 @@ export async function getCategoriesList() {
     let list = [];
 
     result.forEach(element => {
-        list.push(new Category(element));
+        list.push(new category(element));
     });
 
     return list;
@@ -152,7 +153,7 @@ export async function getProductsList() {
     const list = [];
 
     result.forEach(element => {
-        list.push(new Product(element));
+        list.push(new product(element));
     });
 
     return list;
@@ -165,26 +166,23 @@ export async function getMenusList() {
     let list = [];
 
     result.forEach((element) => {
-        list.push(new Menu(element));
+        list.push(new menu(element));
     });
 
     return list;
 }
 
-export async function getTimeSlotsList() {
-    let result = await getList('fasce_orarie');
-    result = result['soap:Envelope']['soap:Body']['get_lista_fasce_orarieResponse']['get_lista_fasce_orarieResult'];
+export async function getTimeSlotsListByAccount(user_id) {
+    let result = await getList('fasce_orarie_by_account', { n_id_account: user_id });
+    result = result['soap:Envelope']['soap:Body']['get_lista_fasce_orarie_by_accountResponse']['get_lista_fasce_orarie_by_accountResult']['FasciaOraria'];
 
-    let list = [];
+    const list = [];
 
-    result.forEach((element) => {
-        const product = {
-            'cat': element['C_DESCRI']['_text'],
-            'idCat': element['N_ID']['_text']
-        }
-
-        list.push(product);
-    });
+    if (result instanceof Array) {
+        result.forEach(element => {
+            list.push(new timeslot(element));
+        });
+    }
 
     return list;
 }
