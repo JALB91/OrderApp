@@ -19,20 +19,9 @@ export default class ProductsScreen extends Component {
         super(props);
 
         this.state = {
-            sections: []
+            refreshing: true,
+            sections: [],
         };
-
-        server.getCategoriesList().then(function(result) {
-            this.updateCategoriesList(result);
-        }.bind(this), function(reason) {
-            console.error(reason);
-        });
-
-        server.getProductsList().then(function(result) {
-            this.updateProductsList(result);
-        }.bind(this), function(reason) {
-            console.error(reason);
-        });
     }
 
     static navigationOptions = ({navigation}) => {
@@ -52,27 +41,29 @@ export default class ProductsScreen extends Component {
         });
     }
 
+    componentDidMount() {
+        this.fetchProductsList();
+    }
+
     goToCart() {
         this.props.navigation.navigate('Cart');
     }
 
-    updateCategoriesList(categories) {
-        let sections = this.state.sections;
-        categories.forEach(category => {
-            const section = sections.find(section => {
-                return section.title === category.cat;
-            });
+    fetchProductsList() {
+        this.setState({refreshing: true});
 
-            if (!section) {
-                sections.push({title: category.cat, active: true, data: []});
-            }
+        server.getProductsList()
+        .then(function(result) {
+            this.updateProductsList(result);
+        }
+        .bind(this), function(reason) {
+            console.error(reason);
         });
-        this.setState({'sections': sections});
     }
 
     updateProductsList(products) {
         cart.products = products;
-        let sections = this.state.sections;
+        const sections = [];
         products.forEach(product => {
             const section = sections.find(section => {
                 return section.title === product.cat;
@@ -84,7 +75,7 @@ export default class ProductsScreen extends Component {
                 section.data.push(product);
             }
         });
-        this.setState({'sections': sections});
+        this.setState({'sections': sections, refreshing: false});
     }
 
     isItemActive(item) {
@@ -98,6 +89,8 @@ export default class ProductsScreen extends Component {
         return (
             <View style={styles.container}>
                 <SectionList
+                    onRefresh={this.fetchProductsList.bind(this)}
+                    refreshing={this.state.refreshing}
                     sections={this.state.sections}
                     renderItem= {({item}) =>
                         utils.renderif(this.isItemActive(item), <Product product={item} />)

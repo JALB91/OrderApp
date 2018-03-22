@@ -7,6 +7,7 @@ import {
 import Button from '../Button';
 import cart from '../../client/cart';
 import utils from '../../utils';
+import { EventRegister as Event } from 'react-native-event-listeners'
 
 export default class Cart extends Component {
     constructor(props) {
@@ -17,14 +18,15 @@ export default class Cart extends Component {
     }
 
     componentWillUnmount() {
-        if (cart.listeners.indexOf(this.onCartUpdate)) {
-            cart.listeners.splice(cart.listeners.indexOf(this.onCartUpdate), 1);
+        if (this.listener) {
+            Event.removeEventListener(this.listener);
+            this.listener = null;
         }
     }
 
-    componentWillMount() {
-        if (!cart.listeners.indexOf(this.onCartUpdate)) {
-            cart.listeners.push(this.onCartUpdate.bind(this));
+    componentDidMount() {
+        if (!this.listener) {
+            this.listener = Event.addEventListener('cartUpdate', this.onCartUpdate.bind(this));
         }
     }
     

@@ -1,3 +1,5 @@
+import { EventRegister as Event } from 'react-native-event-listeners';
+
 class cart {
     constructor() {
         this.productsQuantity = {};
@@ -39,36 +41,32 @@ class cart {
         const currentValue = this.getQuantityForProductID(productID);
         this.productsQuantity[productID] = currentValue + 1;
 
-        this.listeners.forEach(listener => {
-            listener();
-        });
+        this.notifyListeners();
     }
 
     removeProduct(productID) {
         const currentValue = this.getQuantityForProductID(productID);
         this.productsQuantity[productID] = Math.max(0, currentValue - 1);
 
-        this.listeners.forEach(listener => {
-            listener();
-        });
+        this.notifyListeners();
     }
 
     addMenu(menuID) {
         const currentValue = this.getQuantityForMenuID(menuID);
         this.menusQuantity[menuID] = currentValue + 1;
         
-        this.listeners.forEach(listener => {
-            listener();
-        });
+        this.notifyListeners();
     }
 
     removeMenu(menuID) {
         const currentValue = this.getQuantityForMenuID(menuID);
         this.menusQuantity[menuID] = Math.max(0, currentValue - 1);
         
-        this.listeners.forEach(listener => {
-            listener();
-        });
+        this.notifyListeners();
+    }
+
+    notifyListeners() {
+        Event.emit('cartUpdate');
     }
 }
 
