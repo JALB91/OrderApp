@@ -34,6 +34,7 @@ export default class Button extends Component {
             <TouchableOpacity style= {this.props.style} onPress= {this.props.onPress}>
                 { utils.renderif(this.props.text, this.getText()) }
                 { utils.renderif(this.props.imgUri, this.getImage())}
+                { this.props.children }
             </TouchableOpacity>
         );
     }
