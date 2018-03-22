@@ -2,8 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     container: {
-        flex: 1,
-        paddingTop: 22
+        flex: 1
     },
 
     sectionHeader: {

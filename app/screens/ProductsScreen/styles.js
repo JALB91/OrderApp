@@ -2,8 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     container: {
-        flex: 1,
-        paddingTop: 22
+        flex: 1
     },
 
     sectionHeader: {
@@ -19,5 +18,12 @@ export default StyleSheet.create({
     sectionTitle: {
         fontSize: 14,
         fontWeight: 'bold'
+    },
+
+    filter: {
+        flex: 1,
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'flex-start'
     }
 });

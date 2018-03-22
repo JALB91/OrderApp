@@ -5,9 +5,11 @@ import {
     Image
 } from 'react-native';
 import Counter from '../Counter';
-import styles from './styles';
+import Button from '../Button';
 import cart from '../../client/cart';
 import utils from '../../utils';
+import styles from './styles';
+import user from '../../client/user';
 
 export default class Product extends Component {
     constructor(props) {
@@ -34,16 +36,36 @@ export default class Product extends Component {
         )
     }
 
+    addToFavourites() {
+        user.addFavouriteProduct(this.props.product.id);
+    }
+
+    removeFromFavourites() {
+        user.removeFavouriteProduct(this.props.product.id);
+    }
+
     render() {
         return (
             <View style={styles.itemContainer}>
                 <View style= {{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }}>
-                    <Image source= {{ uri: this.props.product.getImageUri() }} style= {{ width: 50, height: 50 }} />
+                    <Button 
+                    imgUri={user.isProductFavourite(this.props.product.id) ? require('../../../assets/star_full.png') : require('../../../assets/star_empty.png')}
+                    imgStyle={{ width: 25, height: 25, marginTop: 12.5 }} 
+                    onPress={() => {
+                        if (!user.isProductFavourite(this.props.product.id)) {
+                            this.addToFavourites();
+                        } else {
+                            this.removeFromFavourites();
+                        }
+                        this.forceUpdate();
+                    }}
+                    />
+                    <Image source={{ uri: this.props.product.getImageUri() }} style={{ width: 50, height: 50 }} />
                     { utils.renderif(this.props.product.isNew, this.getNewImage()) }
-                    <Text style= {styles.item}> {this.props.product.descr} </Text>
+                    <Text style={styles.item}> {this.props.product.descr} </Text>
                 </View>
-                <View style= {{ flex: 2, flexDirection: 'row', justifyContent: 'center' }}>
-                    <Text style= {styles.item}> ${this.props.product.price} </Text>
+                <View style={{ flex: 2, flexDirection: 'row', justifyContent: 'center' }}>
+                    <Text style={styles.item}> ${this.props.product.price} </Text>
                 </View>
                 { this.getCounter() }
             </View>

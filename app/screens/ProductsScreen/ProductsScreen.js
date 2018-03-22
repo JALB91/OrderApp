@@ -4,7 +4,8 @@ import {
     Text,
     View,
     SectionList,
-    Image
+    Image,
+    Picker
 } from 'react-native';
 import Product from '../../components/Product';
 import Button from '../../components/Button';
@@ -12,6 +13,7 @@ import Cart from '../../components/Cart';
 import styles from './styles';
 import utils from '../../utils';
 import cart from '../../client/cart';
+import user from '../../client/user';
 import * as server from '../../config/server';
 
 export default class ProductsScreen extends Component {
@@ -21,6 +23,7 @@ export default class ProductsScreen extends Component {
         this.state = {
             refreshing: true,
             sections: [],
+            activeFilter: 0
         };
     }
 
@@ -79,15 +82,41 @@ export default class ProductsScreen extends Component {
     }
 
     isItemActive(item) {
+        let isActive = true;
+
+        if (this.state.activeFilter === 1) {    // News filter
+            isActive = user.isProductFavourite(item.id);
+        }
+        else if (this.state.activeFilter === 2) {    // News filter
+            isActive = item.isNew;
+        }
+
         const section = this.state.sections.find(section => {
             return section.title === item.cat;
         });
-        return section.active;
+
+        return section.active && isActive;
+    }
+
+    getFilter() {
+        return (
+            <Picker
+            prompt='Filter'
+            enabled={!this.state.refreshing}
+            selectedValue={this.state.activeFilter}
+            onValueChange={value => this.setState({activeFilter: value})}
+            >
+            <Picker.Item label='No filter' value={0} />
+            <Picker.Item label='Favourite' value={1} />
+            <Picker.Item label='News' value={2} />
+            </Picker>
+        );
     }
 
     render() {
         return (
             <View style={styles.container}>
+                {this.getFilter()}
                 <SectionList
                     onRefresh={this.fetchProductsList.bind(this)}
                     refreshing={this.state.refreshing}
