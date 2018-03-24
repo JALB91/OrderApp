@@ -46,7 +46,7 @@ export default class Cart extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, padding: 25, alignItems: 'center', alignContent: 'center' }}>
+            <View style={{ flex: 1, padding: 15, alignItems: 'center', alignContent: 'center' }}>
                 { utils.renderif(this.state.total > 0, this.getBadge()) }
                 <Button
                 imgUri={require('../../../assets/cart.png')}

@@ -4,7 +4,6 @@ import {
     Text
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import Cart from '../../components/Cart';
 import utils from '../../utils';
 import styles from './styles';
 
@@ -17,21 +16,8 @@ export default class AccountScreen extends Component {
         const params = navigation.state.params || {};
 
         return {
-            title: 'Account',
-            headerRight: (
-                <Cart onPress={params.goToCart} />
-            )
+            title: 'Account'
         }
-    }
-
-    componentWillMount() {
-        this.props.navigation.setParams({
-            goToCart: this.goToCart.bind(this)
-        });
-    }
-
-    goToCart() {
-        this.props.navigation.navigate('Cart');
     }
 
     render() {
