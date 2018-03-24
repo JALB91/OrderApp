@@ -19,6 +19,7 @@ import category from '../client/category';
 import product from '../client/product';
 import menu from '../client/menu';
 import { timeslot } from '../client/timeslots';
+import order from '../client/order';
 const convert = require('xml-js');
 
 function getHeadersForRequestType(requestType) {
@@ -208,6 +209,21 @@ export async function getNewsList() {
 
 export async function getProductsListByCat(category) {
     return await getList('prodotti_bycat', {'n_id_categoria': category});
+}
+
+export async function getLastOrdersList(user_id) {
+    let result = await getList('ultmi_ordini', { n_id_account: user_id });
+    result = result['soap:Envelope']['soap:Body']['get_lista_ultmi_ordiniResponse']['get_lista_ultmi_ordiniResult']['Ultimo_ordine'];
+
+    const list = [];
+
+    if (result instanceof Array) {
+        result.forEach(element => {
+            list.push(new order(element));
+        });
+    }
+
+    return list;
 }
 
 export async function getSuggestedProductsList(orders) {

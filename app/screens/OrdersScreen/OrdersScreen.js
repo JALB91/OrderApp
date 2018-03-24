@@ -1,44 +1,67 @@
 import React, { Component } from 'react';
 import {
-    Platform,
-    StyleSheet,
     Text,
-    View
+    View,
+    FlatList
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import Cart from '../../components/Cart';
+import Order from '../../components/Order';
+import user from '../../client/user';
+import * as server from '../../config/server';
 
 export default class OrdersScreen extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            data: []
+        }
+    }
+
+    componentDidMount() {
+        this.fetchOrdersList();
     }
 
     static navigationOptions = ({navigation}) => {
         const params = navigation.state.params || {};
 
         return {
-            title: 'Orders',
-            headerRight: (
-                <Cart onPress={params.goToCart} /> 
-            )
+            title: 'Orders'
         }
     }
 
-    componentWillMount() {
-        this.props.navigation.setParams({
-            goToCart: this.goToCart.bind(this)
+    fetchOrdersList() {
+        server.getLastOrdersList(user.user_id)
+        .then(result => {
+            this.updateOrdersList(result);
+        })
+        .catch(reason => {
+            console.warn(reason);
         });
     }
 
-    goToCart() {
-        this.props.navigation.navigate('Cart');
+    updateOrdersList(orders) {
+        this.setState({data: orders});
+    }
+
+    renderOrder(order) {
+        return (
+            <View style={{flex: 1, alignContent: 'center', padding: 5, margin: 5, borderWidth: 5, borderRadius: 5, borderColor: 'rgba(0,0,0,1.0)'}}>
+                <Text style={{padding: 10, fontWeight: 'bold', alignSelf: 'center'}}> {order.descr} </Text>
+                <Order products={order.products} menus={order.menus} />
+            </View>
+        )
     }
 
     render() {
         return (
-            <View>
-            
-            </View>    
+            <View style={{flex: 1}}>
+                <FlatList
+                data={this.state.data}
+                renderItem={({item}) => this.renderOrder(item)}
+                keyExtractor={(item, index) => item.id}
+                />
+            </View>
         );
     }
 }

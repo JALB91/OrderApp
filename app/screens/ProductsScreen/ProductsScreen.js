@@ -105,6 +105,7 @@ export default class ProductsScreen extends Component {
             enabled={!this.state.refreshing}
             selectedValue={this.state.activeFilter}
             onValueChange={value => this.setState({activeFilter: value})}
+            mode='dropdown'
             >
             <Picker.Item label='No filter' value={0} />
             <Picker.Item label='Favourite' value={1} />

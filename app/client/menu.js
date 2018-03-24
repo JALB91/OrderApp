@@ -1,4 +1,4 @@
-import Product from './product';
+import product from './product';
 
 export default class menu {
     constructor(xml) {
@@ -20,7 +20,7 @@ export default class menu {
 
         if (xml.hasOwnProperty('lista_menu_prod')) {
             xml.lista_menu_prod.MenuProd.forEach(element => {
-                this.products.push(new Product(element.prod));
+                this.products.push(new product(element.prod));
             });
         }
     }
