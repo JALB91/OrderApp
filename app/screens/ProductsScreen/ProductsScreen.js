@@ -128,9 +128,9 @@ export default class ProductsScreen extends Component {
                     renderSectionHeader={({section}) => 
                         <Button 
                         style={styles.sectionHeader}
-                        text={section.title} 
-                        textStyle={styles.titleStyle} 
-                        onPress={() => { 
+                        text={section.title}
+                        textStyle={styles.titleStyle}
+                        onPress={() => {
                             section.active = !section.active;
                             this.setState(this.state);
                         }}

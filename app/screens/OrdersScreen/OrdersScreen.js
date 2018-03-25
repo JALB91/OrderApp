@@ -47,8 +47,7 @@ export default class OrdersScreen extends Component {
     renderOrder(order) {
         return (
             <View style={{flex: 1, alignContent: 'center', padding: 5, margin: 5, borderWidth: 5, borderRadius: 5, borderColor: 'rgba(0,0,0,1.0)'}}>
-                <Text style={{padding: 10, fontWeight: 'bold', alignSelf: 'center'}}> {order.descr} </Text>
-                <Order products={order.products} menus={order.menus} />
+                <Order order={order} />
             </View>
         )
     }

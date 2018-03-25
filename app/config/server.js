@@ -23,7 +23,7 @@ import order from '../client/order';
 const convert = require('xml-js');
 
 function getHeadersForRequestType(requestType) {
-    let headers = new Headers();
+    const headers = new Headers();
     headers.append('Host', 'www.lcpro.it');
     headers.append('Content-Type', 'text/xml; charset=utf-8');
     headers.append('SOAPAction', 'http://lcpro.it/' + requestType);
@@ -79,7 +79,6 @@ async function call(headers, body) {
         result = JSON.parse(convert.xml2json(result._bodyText, {compact: true, spaces: 4, nativeType: true}));
 
         return result;
-
     } catch (error) {
         console.error(error);
     }
@@ -88,7 +87,7 @@ async function call(headers, body) {
 async function getList(itemName, params = null) {
     const requestType = 'get_lista_' + itemName;
 
-    let headers = getHeadersForRequestType(requestType);
+    const headers = getHeadersForRequestType(requestType);
     const body = getBodyForRequestType(requestType, params);
 
     const options = {ignoreComment: true, spaces: 4, compact: true};
@@ -139,25 +138,26 @@ export async function changePassword(user_id, username, oldPassword, newPassword
     }
 }
 
-export async function putOrder(order) {
+export async function putOrder(user_id, ts_descr, products, menus) {
     const requestType = 'put_ordine';
 
-    let headers = getHeadersForRequestType(requestType);
-    const body = getBodyForRequestType(requestType, order);
+    const headers = getHeadersForRequestType(requestType);
+    const body = getBodyForRequestType(requestType, {'n_id_account': user_id, 'c_fascia_oraria_descri': ts_descr, 'lista_prodotti_ordinati': products, 'lista_menu_ordinati': menus});
 
     const options = {ignoreComment: true, spaces: 4, compact: true};
     const xmlBody = convert.js2xml(body, options);
 
     headers.append('Content-Length', xmlBody.length);
 
-    const result = await call(headers, xmlBody);
+    const res = await call(headers, xmlBody);
+    console.log(res);
 }
 
 export async function getCategoriesList() {
     let result = await getList('categorie');
     result = result['soap:Envelope']['soap:Body']['get_lista_categorieResponse']['get_lista_categorieResult']['Categoria_prodotti'];
 
-    let list = [];
+    const list = [];
 
     result.forEach(element => {
         list.push(new category(element));
@@ -183,7 +183,7 @@ export async function getMenusList() {
     let result = await getList('menu');
     result = result['soap:Envelope']['soap:Body']['get_lista_menuResponse']['get_lista_menuResult']['Menu'];
 
-    let list = [];
+    const list = [];
 
     result.forEach((element) => {
         list.push(new menu(element));
@@ -202,6 +202,8 @@ export async function getTimeSlotsListByAccount(user_id) {
         result.forEach(element => {
             list.push(new timeslot(element));
         });
+    } else {
+        list.push(new timeslot(result));
     }
 
     return list;
@@ -211,7 +213,7 @@ export async function getNewsList() {
     let result = await getList('novita');
     result = result['soap:Envelope']['soap:Body']['get_lista_novitaResponse']['get_lista_novitaResult'];
 
-    let list = [];
+    const list = [];
 
     if (result.constructor !== Array) return list;
 
@@ -231,8 +233,8 @@ export async function getProductsListByCat(category) {
 }
 
 export async function getLastOrdersList(user_id) {
-    let result = await getList('ultmi_ordini', { n_id_account: user_id });
-    result = result['soap:Envelope']['soap:Body']['get_lista_ultmi_ordiniResponse']['get_lista_ultmi_ordiniResult']['Ultimo_ordine'];
+    let result = await getList('ultimi_ordini', { n_id_account: user_id });
+    result = result['soap:Envelope']['soap:Body']['get_lista_ultimi_ordiniResponse']['get_lista_ultimi_ordiniResult']['Ultimo_ordine'];
 
     const list = [];
 
@@ -246,7 +248,7 @@ export async function getLastOrdersList(user_id) {
 }
 
 export async function getSuggestedProductsList(orders) {
-    let ordersList;
+    const ordersList = [];
 
     orders.foreach((value) => {
         ordersList.append({ 'int': value });

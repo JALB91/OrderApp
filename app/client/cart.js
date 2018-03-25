@@ -65,6 +65,12 @@ class cart {
         this.notifyListeners();
     }
 
+    removeAll() {
+        this.productsQuantity = {};
+        this.menusQuantity = {};
+        this.notifyListeners();
+    }
+
     notifyListeners() {
         Event.emit('cartUpdate');
     }

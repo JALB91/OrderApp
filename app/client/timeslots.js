@@ -16,16 +16,7 @@ class timeslots {
 
         await server.getTimeSlotsListByAccount(user.user_id)
         .then(result => {
-            if (result instanceof Array) {
-                result.forEach(value1 => {
-                    const found = this.data.find(value2 => value1.isEqual(value2));
-                    if (!found) {
-                        this.data.push(value1);
-                    } else {
-                        found.validUntil = value1.validUntil;
-                    }
-                })
-            }
+            this.data = result;
         })
         .catch(reason => {
             console.log(reason);
@@ -39,15 +30,6 @@ class timeslots {
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
-    }
-
-    getActiveTimeslot() {
-        for (let i = this.data.length - 1; i >= 0; i--) {
-            if (ts.now() > this.data[i].validUntil || this.data.validUntil - ts.now() > 60*10 + 10) {
-                this.data.splice(i, 1);
-            }
-        }
-        return this.data;
     }
 }
 
@@ -66,18 +48,6 @@ export class timeslot {
                 this[key] = xml[prototype[key]]['_text'];
             }
         });
-
-        this.validUntil = ts.now() + 60*10;
-    }
-
-    isEqual(timeslot) {
-        const keys = ['start_h', 'start_m', 'end_h', 'end_m'];
-        keys.forEach(key => {
-            if (!timeslot.hasOwnProperty(key) || timeslot[key] !== this[key]) {
-                return false;
-            }
-            return true;
-        })
     }
 }
 

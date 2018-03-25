@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import {
     View,
     Text,
-    SectionList
+    SectionList,
+    FlatList,
+    Modal
 } from 'react-native';
 import Button from '../Button';
 import Product from '../Product';
 import Menu from '../Menu';
 import utils from '../../utils';
 import styles from './styles';
+import timeslots from '../../client/timeslots';
 
 export default class Order extends Component {
     constructor(props) {
@@ -16,18 +19,18 @@ export default class Order extends Component {
 
         this.state = {
             sections: [
-                {title: 'Menus', active: true, data: props.menus || []},
-                {title: 'Products', active: true, data: props.products || []}
+                {title: 'Menus', active: true, data: this.props.order.menus},
+                {title: 'Products', active: true, data: this.props.order.products}
             ]
         }
     }
 
     isProduct(item) {
-        return this.props.products.indexOf(item) >= 0;
+        return this.props.order.products.indexOf(item) >= 0;
     }
 
     isMenu(item) {
-        return this.props.menus.indexOf(item) >= 0;
+        return this.props.order.menus.indexOf(item) >= 0;
     }
 
     isItemActive(item) {
@@ -46,7 +49,7 @@ export default class Order extends Component {
                     canIncrease={false}
                 />
             );
-        } else {
+        } else if (this.isMenu(item)) {
             return (
                 <Menu
                     menu={item}
@@ -54,6 +57,16 @@ export default class Order extends Component {
                 />
             );
         }
+
+        return null;
+    }
+
+    getTimeslot() {
+        return (
+            <Text style={{flex: 1}}>
+                {this.props.order.descr}
+            </Text>
+        );
     }
 
     render() {
@@ -66,9 +79,9 @@ export default class Order extends Component {
                     }
                     renderSectionHeader={({ section }) =>
                         <Button
+                            textStyle={styles.titleStyle}
                             style={styles.sectionHeader}
                             text={section.title}
-                            textStyle={styles.titleStyle}
                             onPress={() => {
                                 section.active = !section.active;
                                 this.setState(this.state);
@@ -77,7 +90,16 @@ export default class Order extends Component {
                     }
                     keyExtractor={(item, index) => index}
                 />
+                {this.getTimeslot()}
             </View>
         )
+    }
+}
+
+Order.defaultProps = {
+    order: {
+        products: [],
+        menus: [],
+        descr: ''
     }
 }
