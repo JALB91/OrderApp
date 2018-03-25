@@ -26,7 +26,7 @@ export default class Order extends Component {
         return this.props.products.indexOf(item) >= 0;
     }
 
-    ifMenu(item) {
+    isMenu(item) {
         return this.props.menus.indexOf(item) >= 0;
     }
 

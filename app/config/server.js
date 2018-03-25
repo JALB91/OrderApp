@@ -102,7 +102,7 @@ async function getList(itemName, params = null) {
 export async function login(username, password) {
     const requestType = 'login';
 
-    let headers = getHeadersForRequestType(requestType);
+    const headers = getHeadersForRequestType(requestType);
     const body = getBodyForRequestType(requestType, { username, password });
 
     const options = {ignoreComment: true, spaces: 4, compact: true};
@@ -113,10 +113,29 @@ export async function login(username, password) {
     try {
         const result = await call(headers, xmlBody);
         return result['soap:Envelope']['soap:Body']['loginResponse']['loginResult']['N_ID']['_text'];
-    }
-    catch(e) {
+    } catch(e) {
         console.log(e);
         return 0;
+    }
+}
+
+export async function changePassword(user_id, username, oldPassword, newPassword) {
+    const requestType = 'change_user_password';
+
+    const headers = getHeadersForRequestType(requestType);
+    const body = getBodyForRequestType(requestType, {'n_id_account': user_id, 'username': username, 'old_password': oldPassword, 'new_password': newPassword});
+
+    const options = {ignoreComment: true, spaces: 4, compact: true};
+    const xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    try {
+        const result = await call(headers, xmlBody);
+        return result['soap:Envelope']['soap:Body']['faultstring']['_text'] || '';
+    } catch (e) {
+        console.log(e);
+        return false;
     }
 }
 
