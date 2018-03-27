@@ -2,72 +2,83 @@ import { EventRegister as Event } from 'react-native-event-listeners';
 
 class cart {
     constructor() {
-        this.productsQuantity = {};
-        this.menusQuantity = {};
         this.products = [];
         this.menus = [];
         this.listeners = [];
+
+        this.productsQuantity = {};
+        this.selections = [];
+
+        this.cart_id = 0;
     }
 
-    getQuantityForProductID(productID) {
-        return this.productsQuantity[productID] || 0;
+    getQuantityForProductId(id) {
+        return this.productsQuantity.id || 0;
     }
 
-    getQuantityForMenuID(menuID) {
-        return this.menusQuantity[menuID] || 0;
+    getQuantityForMenuId(id) {
+        return this.selections.filter(selection => selection.menu.id === id).length;
     }
 
     getTotalNumberOfProducts() {
         let result = 0;
-        this.products.forEach(product => {
-            result += this.getQuantityForProductID(product.id);
+        Object.keys(this.productsQuantity).forEach(key => {
+            result += this.productsQuantity[key];
         });
         return result;
     }
 
     getTotalNumberOfMenus() {
-        let result = 0;
-        this.menus.forEach(menu => {
-            result += this.getQuantityForMenuID(menu.id);
-        });
-        return result;
+        return this.selections.length;
     }
 
     getTotal() {
         return (this.getTotalNumberOfMenus() + this.getTotalNumberOfProducts());
     }
 
-    addProduct(productID) {
-        const currentValue = this.getQuantityForProductID(productID);
-        this.productsQuantity[productID] = currentValue + 1;
-
+    addProduct(product) {
+        this.productsQuantity[product.id] = (this.productsQuantity[product.id] || 0) + 1;
         this.notifyListeners();
     }
 
-    removeProduct(productID) {
-        const currentValue = this.getQuantityForProductID(productID);
-        this.productsQuantity[productID] = Math.max(0, currentValue - 1);
+    removeProduct(product) {
+        if (this.productsQuantity.hasOwnProperty(product.id)) {
+            this.productsQuantity[product.id] = Math.max(0, this.productsQuantity[product.id] - 1);
+            this.notifyListeners();
+        }
+    }
 
+    addSelection(selection) {
+        if (selection.hasOwnProperty('cart_id')) {
+            return;
+        }
+        selection.cart_id = this.cart_id++;
+        this.selections.push(selection);
         this.notifyListeners();
     }
 
-    addMenu(menuID) {
-        const currentValue = this.getQuantityForMenuID(menuID);
-        this.menusQuantity[menuID] = currentValue + 1;
-        
-        this.notifyListeners();
+    updateSelection(selection) {
+        if (selection.hasOwnProperty('cart_id')) {
+            const res = this.selections.find(el => el.cart_id === selection.cart_id);
+            if (res) {
+                this.selections[this.selections.indexOf(res)] = selection;
+            }
+        }
     }
 
-    removeMenu(menuID) {
-        const currentValue = this.getQuantityForMenuID(menuID);
-        this.menusQuantity[menuID] = Math.max(0, currentValue - 1);
-        
-        this.notifyListeners();
+    removeSelection(selection) {
+        if (selection.hasOwnProperty('cart_id')) {
+            const res = this.selections.find(el => el.cart_id === selection.cart_id);
+            if (res) {
+                this.selections.splice(this.selections.indexOf(res), 1);
+                this.notifyListeners();
+            }
+        }
     }
 
     removeAll() {
         this.productsQuantity = {};
-        this.menusQuantity = {};
+        this.selections = [];
         this.notifyListeners();
     }
 

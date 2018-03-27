@@ -4,6 +4,7 @@ import {
     Text,
     Image
 } from 'react-native';
+import CheckBox from 'react-native-check-box';
 import Counter from '../Counter';
 import Button from '../Button';
 import cart from '../../client/cart';
@@ -28,10 +29,21 @@ export default class Product extends Component {
     getCounter() {
         return (
             <Counter
-            startingQuantity={cart.getQuantityForProductID(this.props.product.id)}
-            canIncrease={this.props.canIncrease}
-            onAdd={() => cart.addProduct(this.props.product.id)}
-            onRemove={() => cart.removeProduct(this.props.product.id)}
+            startingQuantity={cart.getQuantityForProductId(this.props.product.id)}
+            canIncrease={this.props.canModify}
+            canDecrease={this.props.canModify}
+            onAdd={() => cart.addProduct(this.props.product)}
+            onRemove={() => cart.removeProduct(this.props.product)}
+            />
+        )
+    }
+
+    getCheckBox() {
+        return (
+            <CheckBox
+            style={{flex: 1, padding: 10}}
+            onClick={this.props.toggleSelect || (() => {})}
+            isChecked={this.props.selected}
             />
         )
     }
@@ -67,12 +79,17 @@ export default class Product extends Component {
                 <View style={{ flex: 2, flexDirection: 'row', justifyContent: 'center' }}>
                     <Text style={styles.item}> ${this.props.product.price} </Text>
                 </View>
-                { this.getCounter() }
+                { utils.renderif(this.props.countMode, this.getCounter()) }
+                { utils.renderif(this.props.selectMode, this.getCheckBox()) }
             </View>
         );
     }
 }
 
 Product.defaultProps = {
-    canIncrease: true
+    canModify: true,
+    countMode: true,
+    selectMode: false,
+    selected: false,
+    toggleSelect: null
 }

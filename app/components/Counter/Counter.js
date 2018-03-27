@@ -57,7 +57,7 @@ export default class Counter extends Component {
             <View style= {{ flex: 0.25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                 <Text> {this.state.quantity} </Text>
                 { utils.renderif(this.props.canIncrease, this.getRemoveButton())}
-                { utils.renderif(this.props.canIncrease, this.getAddButton())}
+                { utils.renderif(this.props.canDecrease, this.getAddButton())}
             </View>
         )
     }
@@ -66,6 +66,7 @@ export default class Counter extends Component {
 Counter.defaultProps = {
     startingQuantity: 0,
     canIncrease: true,
+    canDecrease: true,
     min: 0,
     max: 3
 }

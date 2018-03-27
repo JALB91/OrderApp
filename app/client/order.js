@@ -1,5 +1,5 @@
 import product from './product';
-import menu from './menu';
+import selection from './selection';
 
 export default class order {
     constructor(xml) {
@@ -23,11 +23,11 @@ export default class order {
             });
         }
 
-        this.menus = [];
+        this.selections = [];
 
         if (xml.hasOwnProperty('lista_menu_ordinati') && xml['lista_menu_ordinati'].hasOwnProperty('Menu')) {
             xml.lista_menu_ordinati.Menu.forEach(element => {
-                this.menus.push(new menu(element));
+                this.selections.push(new selection({xml: element}));
             });
         }
     }
