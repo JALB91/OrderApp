@@ -10,8 +10,8 @@ import Button from '../Button';
 import styles from './styles';
 import Product from '../Product';
 import Selection from '../Selection';
-import selection from '../../client/selection';
-import cart from '../../client/cart';
+import selection from '../../models/selection';
+import cart from '../../models/cart';
 import utils from '../../utils';
 
 class Menu extends Component {

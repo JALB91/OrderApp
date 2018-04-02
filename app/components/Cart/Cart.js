@@ -5,7 +5,7 @@ import {
     Image
 } from 'react-native';
 import Button from '../Button';
-import cart from '../../client/cart';
+import cart from '../../models/cart';
 import utils from '../../utils';
 import { EventRegister as Event } from 'react-native-event-listeners'
 

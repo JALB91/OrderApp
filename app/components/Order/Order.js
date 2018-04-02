@@ -11,7 +11,7 @@ import Product from '../Product';
 import Menu from '../Menu';
 import utils from '../../utils';
 import styles from './styles';
-import timeslots from '../../client/timeslots';
+import timeslots from '../../models/timeslots';
 
 export default class Order extends Component {
     constructor(props) {

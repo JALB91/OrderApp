@@ -1,5 +1,5 @@
 import user from './user';
-import * as server from '../config/server';
+import * as api from '../utils/api';
 const ts = require('unix-timestamp');
 ts.round = true;
 
@@ -14,7 +14,7 @@ class timeslots {
             return;
         }
 
-        await server.getTimeSlotsListByAccount(user.user_id)
+        await api.getTimeSlotsListByAccount(user.user_id)
         .then(result => {
             this.data = result;
         })

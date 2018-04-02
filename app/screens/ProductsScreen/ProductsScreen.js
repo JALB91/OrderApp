@@ -12,9 +12,9 @@ import Button from '../../components/Button';
 import Cart from '../../components/Cart';
 import styles from './styles';
 import utils from '../../utils';
-import cart from '../../client/cart';
-import user from '../../client/user';
-import * as server from '../../config/server';
+import cart from '../../models/cart';
+import user from '../../models/user';
+import * as api from '../../utils/api';
 
 export default class ProductsScreen extends Component {
     constructor(props) {
@@ -55,7 +55,7 @@ export default class ProductsScreen extends Component {
     fetchProductsList() {
         this.setState({refreshing: true});
 
-        server.getProductsList()
+        api.getProductsList()
         .then(function(result) {
             this.updateProductsList(result);
         }

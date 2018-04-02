@@ -8,8 +8,8 @@ import {
 import { withNavigation } from 'react-navigation';
 import Button from '../Button';
 import Product from '../Product';
-import selection from '../../client/selection';
-import cart from '../../client/cart';
+import selection from '../../models/selection';
+import cart from '../../models/cart';
 import utils from '../../utils';
 import styles from './styles';
 

@@ -10,12 +10,12 @@ import {
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import Order from '../../components/Order';
-import user from '../../client/user';
-import cart from '../../client/cart';
+import user from '../../models/user';
+import cart from '../../models/cart';
 import utils from '../../utils';
-import * as server from '../../config/server';
+import * as api from '../../utils/api';
 import styles from './styles';
-import timeslots from '../../client/timeslots';
+import timeslots from '../../models/timeslots';
 
 
 export default class CartScreen extends Component {
@@ -67,7 +67,7 @@ export default class CartScreen extends Component {
         cart.menus.forEach(menu => {
             
         });
-        server.putOrder(user.user_id, timeslots.data[this.state.timeslot], products, menus)
+        api.putOrder(user.user_id, timeslots.data[this.state.timeslot], products, menus)
         .then(result => {
             cart.removeAll();
             this.setState({ loading: false, productsData: [], menusData: [] });

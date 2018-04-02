@@ -7,8 +7,8 @@ import {
 import { StackNavigator } from 'react-navigation';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
-import * as server from '../../config/server';
-import user from '../../client/user';
+import * as api from '../../utils/api';
+import user from '../../models/user';
 import utils from '../../utils';
 import styles from './styles';
 
@@ -35,7 +35,7 @@ export default class AccountScreen extends Component {
 
     changePassword() {
         this.setState({ loading: true });
-        server.changePassword(user.user_id, user.username, this.state.oldPassword, this.state.newPassword)
+        api.changePassword(user.user_id, user.username, this.state.oldPassword, this.state.newPassword)
         .then(() => {
             this.setState({ loading: false });
         })

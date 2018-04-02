@@ -11,8 +11,8 @@ import Button from '../../components/Button';
 import Cart from '../../components/Cart';
 import styles from './styles';
 import utils from '../../utils';
-import cart from '../../client/cart';
-import * as server from '../../config/server';
+import cart from '../../models/cart';
+import * as api from '../../utils/api';
 
 export default class MenusScreen extends Component {
     constructor(props) {
@@ -52,7 +52,7 @@ export default class MenusScreen extends Component {
     fetchMenusList() {
         this.setState({refreshing: true});
 
-        server.getMenusList().then(function(result) {
+        api.getMenusList().then(function(result) {
             this.updateMenusList(result);
         }.bind(this), function(reason) {
             console.error(reason);

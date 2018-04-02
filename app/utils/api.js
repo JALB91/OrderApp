@@ -13,13 +13,12 @@
 */
 
 
-import React from 'react';
-import * as config from './config';
-import category from '../client/category';
-import product from '../client/product';
-import menu from '../client/menu';
-import { timeslot } from '../client/timeslots';
-import order from '../client/order';
+import config from '../config';
+import category from '../models/category';
+import product from '../models/product';
+import menu from '../models/menu';
+import { timeslot } from '../models/timeslots';
+import order from '../models/order';
 const convert = require('xml-js');
 
 function getHeadersForRequestType(requestType) {

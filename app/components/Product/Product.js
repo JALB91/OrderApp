@@ -7,10 +7,10 @@ import {
 import CheckBox from 'react-native-check-box';
 import Counter from '../Counter';
 import Button from '../Button';
-import cart from '../../client/cart';
+import cart from '../../models/cart';
 import utils from '../../utils';
 import styles from './styles';
-import user from '../../client/user';
+import user from '../../models/user';
 
 export default class Product extends Component {
     constructor(props) {

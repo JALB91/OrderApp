@@ -6,8 +6,8 @@ import {
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Order from '../../components/Order';
-import user from '../../client/user';
-import * as server from '../../config/server';
+import user from '../../models/user';
+import * as api from '../../utils/api';
 
 export default class OrdersScreen extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ export default class OrdersScreen extends Component {
     }
 
     fetchOrdersList() {
-        server.getLastOrdersList(user.user_id)
+        api.getLastOrdersList(user.user_id)
         .then(result => {
             this.updateOrdersList(result);
         })

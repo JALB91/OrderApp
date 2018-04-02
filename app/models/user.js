@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import * as server from '../config/server';
+import * as api from '../utils/api';
 
 class user {
     constructor() {

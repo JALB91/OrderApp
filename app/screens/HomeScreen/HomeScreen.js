@@ -9,9 +9,9 @@ import Loading from '../../components/Loading';
 import Login from '../../components/Login';
 import Button from '../../components/Button';
 import utils from '../../utils';
-import user from '../../client/user';
-import timeslots from '../../client/timeslots';
-import * as server from '../../config/server';
+import user from '../../models/user';
+import timeslots from '../../models/timeslots';
+import * as api from '../../utils/api';
 import styles from './styles';
 
 
@@ -66,7 +66,7 @@ export default class HomeScreen extends Component {
 
     login(username, password) {
         this.setState({ready: false});
-        server.login(username, password)
+        api.login(username, password)
         .then(result => {
             this.setState({logged: result ? true : false, ready: true});
             user.setUserData(username, result);
