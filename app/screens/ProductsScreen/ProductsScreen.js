@@ -114,11 +114,11 @@ export default class ProductsScreen extends Component {
         );
     }
 
-    renderProduct() {
+    renderProduct(product) {
         return (
             <Product 
-            product={item} 
-            startingQuantity={cart.getQuantityForProductId(this.props.product.id)} 
+            product={product} 
+            startingQuantity={cart.getQuantityForProductId(product.id)}
             />
         )
     }
@@ -131,9 +131,7 @@ export default class ProductsScreen extends Component {
                     onRefresh={this.fetchProductsList.bind(this)}
                     refreshing={this.state.refreshing}
                     sections={this.state.sections}
-                    renderItem= {({item}) =>
-                        utils.renderif(this.isItemActive(item), this.renderProduct())
-                    }
+                    renderItem= {({item}) => utils.renderif(this.isItemActive(item), this.renderProduct(item))}
                     renderSectionHeader={({section}) => 
                         <Button 
                         style={styles.sectionHeader}
