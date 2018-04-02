@@ -21,6 +21,19 @@ export default class Selection extends Component {
             sections: []
         }
         
+        this.updateSectionsData();
+        this.updateSelectedItems();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.props = nextProps;
+        this.updateSectionsData();
+        this.updateSelectedItems();
+        this.setState(this.state);
+    }
+
+    updateSectionsData() {
+        this.state.sections = [];
         if (this.props.canSelect) {
             this.props.selection.menu.products.forEach(product => {
                 const section = this.state.sections.find(section => section.title === product.cat);
@@ -30,16 +43,14 @@ export default class Selection extends Component {
                     this.state.sections.push({title: product.cat, data: [product]});
                 }
             });
-        } else if (this.props.canModify) {
-            this.props.selection.menu.products.forEach(product => {
-                const section = this.state.sections.find(section => section.title === product.cat);
+        } else if (this.props.canRemove) {
+            Object.keys(this.props.selection.selected).forEach(category => {
+                const section = this.state.sections.find(section => section.title === category);
                 if (!section) {
-                    this.state.sections.push({title: product.cat, data: [product]});
+                    this.state.sections.push({title: category, data: [this.props.selection.selected[category]]});
                 }
             });
         }
-
-        this.updateSelectedItems();
     }
 
     updateSelectedItems() {

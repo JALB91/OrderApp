@@ -42,7 +42,16 @@ export default class MenusScreen extends Component {
     }
 
     componentDidMount() {
+        this.focusListener = this.props.navigation.addListener('willFocus', payload => {
+            this.forceUpdate();
+        });
         this.fetchMenusList();
+    }
+
+    componentWillUnmount() {
+        if (this.focusListener) {
+            this.focusListener.remove();
+        }
     }
 
     goToCart() {

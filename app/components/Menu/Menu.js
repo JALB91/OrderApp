@@ -19,8 +19,7 @@ class Menu extends Component {
         super(props);
 
         this.state = {
-            selected: false,
-            selections: cart.selections
+            selected: false
         }
     }
 
@@ -32,12 +31,15 @@ class Menu extends Component {
 
     removeSelection(selection) {
         cart.removeSelection(selection);
-        this.state.selections.splice(this.state.selections.indexOf(selection));
-        this.setState({selections: this.state.selections});
+        this.forceUpdate();
     }
 
     modifySelection(selection) {
         this.props.navigation.navigate('Selection', { selection: selection, isAdded: false });
+        this.listener = this.props.navigation.addListener('willFocus', payload => {
+            this.forceUpdate();
+            this.listener.remove();
+        });
     }
 
     getAddButton() {
@@ -100,7 +102,7 @@ class Menu extends Component {
         return (
             <View>
                 <FlatList
-                data={this.state.selections}
+                data={cart.selections.filter(selection => this.props.menu.id === selection.menu.id)}
                 renderItem={({item}) => this.renderSelection(item)}
                 keyExtractor={(item, index) => item.cart_id.toString()}
                 />
@@ -113,7 +115,7 @@ class Menu extends Component {
             <View>
                 { this.getMenuItem() }
                 { utils.renderif(this.state.selected, this.getProducts()) }
-                { utils.renderif(this.state.selections.length, this.getSelections()) }
+                { utils.renderif(cart.selections.filter(selection => this.props.menu.id === selection.menu.id).length, this.getSelections()) }
             </View>
         );
     }
