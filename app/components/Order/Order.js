@@ -17,20 +17,32 @@ export default class Order extends Component {
     constructor(props) {
         super(props);
 
+        const productsData = [];
+
+        this.props.order.products.forEach(product => {
+            const item = productsData.find(prod => prod.id === product.id);
+            if (item) {
+                item.quantity++;
+            } else {
+                product.quantity = 1;
+                productsData.push(product);
+            }
+        });
+
         this.state = {
             sections: [
-                {title: 'Menus', active: true, data: this.props.order.menus},
-                {title: 'Products', active: true, data: this.props.order.products}
+                {title: 'Menus', active: true, data: this.props.order.selections},
+                {title: 'Products', active: true, data: productsData}
             ]
-        }
+        }        
     }
 
     isProduct(item) {
-        return this.props.order.products.indexOf(item) >= 0;
+        return this.props.order.products.find(prod => prod.id === item.id);
     }
 
     isMenu(item) {
-        return this.props.order.menus.indexOf(item) >= 0;
+        return this.props.order.selections.indexOf(item) >= 0;
     }
 
     isItemActive(item) {
@@ -46,14 +58,16 @@ export default class Order extends Component {
             return (
                 <Product
                     product={item}
-                    canIncrease={false}
+                    canModify={false}
+                    startingQuantity={item.quantity}
                 />
             );
         } else if (this.isMenu(item)) {
             return (
                 <Menu
-                    menu={item}
-                    canIncrease={false}
+                    menu={item.menu}
+                    canAdd={false}
+                    selections={[item]}
                 />
             );
         }

@@ -102,7 +102,7 @@ class Menu extends Component {
         return (
             <View>
                 <FlatList
-                data={cart.selections.filter(selection => this.props.menu.id === selection.menu.id)}
+                data={this.props.selections}
                 renderItem={({item}) => this.renderSelection(item)}
                 keyExtractor={(item, index) => item.cart_id.toString()}
                 />
@@ -115,13 +115,14 @@ class Menu extends Component {
             <View>
                 { this.getMenuItem() }
                 { utils.renderif(this.state.selected, this.getProducts()) }
-                { utils.renderif(cart.selections.filter(selection => this.props.menu.id === selection.menu.id).length, this.getSelections()) }
+                { utils.renderif(this.props.selections.length, this.getSelections()) }
             </View>
         );
     }
 }
 
 Menu.defaultProps = {
+    selections: [],
     canAdd: true
 }
 

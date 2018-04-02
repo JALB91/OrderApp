@@ -85,7 +85,10 @@ export default class MenusScreen extends Component {
                     refreshing={this.state.refreshing}
                     sections={this.state.sections}
                     renderItem= {({item}) => 
-                        <Menu menu={item} />
+                        <Menu 
+                        menu={item}
+                        selections={cart.selections.filter(sel => sel.menu.id === item.id)}
+                        />
                     }
                     renderSectionHeader={({section}) =>
                         <Text style={styles.sectionHeader}>

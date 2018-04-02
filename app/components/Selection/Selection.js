@@ -43,7 +43,7 @@ export default class Selection extends Component {
                     this.state.sections.push({title: product.cat, data: [product]});
                 }
             });
-        } else if (this.props.canRemove) {
+        } else {
             Object.keys(this.props.selection.selected).forEach(category => {
                 const section = this.state.sections.find(section => section.title === category);
                 if (!section) {

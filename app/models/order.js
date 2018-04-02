@@ -27,7 +27,11 @@ export default class order {
 
         if (xml.hasOwnProperty('lista_menu_ordinati') && xml['lista_menu_ordinati'].hasOwnProperty('Menu')) {
             xml.lista_menu_ordinati.Menu.forEach(element => {
-                this.selections.push(new selection({xml: element}));
+                const selected = [];
+                element['lista_menu_prod'].forEach(prod => {
+                    selected.push(new product(prod.prod));
+                });
+                this.selections.push(new selection({xml: element}, selected));
             });
         }
     }

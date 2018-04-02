@@ -24,26 +24,23 @@ export default class CartScreen extends Component {
 
         this.state = {
             productsData: [],
-            menusData: [],
+            selectionsData: [],
             pickTimeslot: false,
             timeslot: 0,
             loading: false
         }
 
-        const productsQuantity = cart.productsQuantity;
         const products = cart.products;
+        const selections = cart.selections;
 
-        const menusQuantity = cart.menusQuantity;
-        const menus = cart.menus;
-
-        menus.forEach(menu => {
-            if (cart.getQuantityForMenuId(menu.id) > 0) {
-                this.state.menusData.push(menu);
+        selections.forEach(selection => {
+            if (cart.getQuantityForMenuId(selection.menu.id) > 0) {
+                this.state.selectionsData.push(selection);
             }
         });
 
         products.forEach(product => {
-            if (cart.getQuantityForProductId(product.id) > 0) {
+            for (let i = 0; i < cart.getQuantityForProductId(product.id); i++) {
                 this.state.productsData.push(product);
             }
         });
@@ -64,10 +61,12 @@ export default class CartScreen extends Component {
         this.state.productsData.forEach(product => {
             products.push({ 'N_ID_PRODOTTO': product.id, 'N_QTA': cart.getQuantityForProductId(product.id) });
         });
-        cart.menus.forEach(menu => {
-            
+        this.state.selectionsData.forEach(selection => {
+            const products = [];
+            selection.selected.forEach(prod => products.push({'N_ID_PRODOTTO': prod.id, 'N_QTA': 1}));
+            menus.push({'N_ID_MENU': selection.menu.id, 'lista_prodotti_ordinati': products});
         });
-        api.putOrder(user.user_id, timeslots.data[this.state.timeslot], products, menus)
+        api.putOrder(user.user_id, timeslots.data[this.state.timeslot].descr, products, menus)
         .then(result => {
             cart.removeAll();
             this.setState({ loading: false, productsData: [], menusData: [] });
@@ -119,10 +118,10 @@ export default class CartScreen extends Component {
         return (
             <View style={{flex: 1}}>
                 {utils.renderif(this.state.loading, <Loading />)}
-                <Order order={{products: this.state.productsData, menus: this.state.menusData, descr: timeslots.data[this.state.timeslot].descr}} />
-                {utils.renderif(this.state.productsData.length || this.state.menusData.length, <Button onPress={()=>this.setState({pickTimeslot: true})} text='Timeslots' />)}
+                <Order order={{products: this.state.productsData, selections: this.state.selectionsData, descr: timeslots.data[this.state.timeslot].descr}} />
+                {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, <Button onPress={()=>this.setState({pickTimeslot: true})} text='Timeslots' />)}
                 {this.getTimeslotsPicker()}
-                {utils.renderif(this.state.productsData.length || this.state.menusData.length, this.getOrderButton())}
+                {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, this.getOrderButton())}
             </View>
         );
     }

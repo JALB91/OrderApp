@@ -13,7 +13,7 @@ class cart {
     }
 
     getQuantityForProductId(id) {
-        return this.productsQuantity.id || 0;
+        return this.productsQuantity[id] || 0;
     }
 
     getQuantityForMenuId(id) {

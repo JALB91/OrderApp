@@ -29,7 +29,7 @@ export default class Product extends Component {
     getCounter() {
         return (
             <Counter
-            startingQuantity={cart.getQuantityForProductId(this.props.product.id)}
+            startingQuantity={this.props.startingQuantity}
             canIncrease={this.props.canModify}
             canDecrease={this.props.canModify}
             onAdd={() => cart.addProduct(this.props.product)}
@@ -87,6 +87,7 @@ export default class Product extends Component {
 }
 
 Product.defaultProps = {
+    startingQuantity: 0,
     canModify: true,
     countMode: true,
     selectMode: false,

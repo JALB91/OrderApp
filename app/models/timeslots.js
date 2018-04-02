@@ -19,7 +19,7 @@ class timeslots {
             this.data = result;
         })
         .catch(reason => {
-            console.log(reason);
+            console.warn(reason);
             this.data = [];
         });
 

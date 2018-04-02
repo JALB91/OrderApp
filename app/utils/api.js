@@ -112,7 +112,7 @@ export async function login(username, password) {
         const result = await call(headers, xmlBody);
         return result['soap:Envelope']['soap:Body']['loginResponse']['loginResult']['N_ID']['_text'];
     } catch(e) {
-        console.log(e);
+        console.warn(e);
         return 0;
     }
 }
@@ -132,7 +132,7 @@ export async function changePassword(user_id, username, oldPassword, newPassword
         const result = await call(headers, xmlBody);
         return result['soap:Envelope']['soap:Body']['faultstring']['_text'] || '';
     } catch (e) {
-        console.log(e);
+        console.warn(e);
         return false;
     }
 }
@@ -141,7 +141,7 @@ export async function putOrder(user_id, ts_descr, products, menus) {
     const requestType = 'put_ordine';
 
     const headers = getHeadersForRequestType(requestType);
-    const body = getBodyForRequestType(requestType, {'n_id_account': user_id, 'c_fascia_oraria_descri': ts_descr, 'lista_prodotti_ordinati': products, 'lista_menu_ordinati': menus});
+    const body = getBodyForRequestType(requestType, {'n_id_account': user_id, 'c_fascia_oraria_descri': ts_descr, 'lista_prodotti_selezionati': products, 'lista_menu_selezionati': menus});
 
     const options = {ignoreComment: true, spaces: 4, compact: true};
     const xmlBody = convert.js2xml(body, options);
@@ -149,7 +149,6 @@ export async function putOrder(user_id, ts_descr, products, menus) {
     headers.append('Content-Length', xmlBody.length);
 
     const res = await call(headers, xmlBody);
-    console.log(res);
 }
 
 export async function getCategoriesList() {
