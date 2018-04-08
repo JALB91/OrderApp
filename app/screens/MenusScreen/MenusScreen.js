@@ -3,7 +3,7 @@ import {
     Platform,
     Text,
     View,
-    SectionList,
+    FlatList,
     Image
 } from 'react-native';
 import Menu from '../../components/Menu';
@@ -20,7 +20,7 @@ export default class MenusScreen extends Component {
 
         this.state = {
             refreshing: true,
-            sections: []
+            menus: []
         };
     }
 
@@ -61,41 +61,48 @@ export default class MenusScreen extends Component {
     fetchMenusList() {
         this.setState({refreshing: true});
 
-        api.getMenusList().then(function(result) {
+        api.getMenusList()
+        .then(result => {
             this.updateMenusList(result);
-        }.bind(this), function(reason) {
-            console.error(reason);
+        })
+        .catch(reason => {
+            console.warn(reason);
         });
     }
 
     updateMenusList(menus) {
         cart.menus = menus;
-        const sections = [{title: 'Menu', data: []}];
         menus.forEach(menu => {
-            sections[0]['data'].push(menu);
+            this.state.menus.push(menu);
         });
-        this.setState({'sections': sections, refreshing: false});
+        this.setState({menus: this.state.menus, refreshing: false});
+    }
+
+    getTitle() {
+        return (
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                    Menus
+                </Text>
+            </View>
+        );
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                <SectionList
-                    onRefresh={this.fetchMenusList.bind(this)}
-                    refreshing={this.state.refreshing}
-                    sections={this.state.sections}
-                    renderItem= {({item}) => 
-                        <Menu 
-                        menu={item}
-                        selections={cart.selections.filter(sel => sel.menu.id === item.id)}
-                        />
-                    }
-                    renderSectionHeader={({section}) =>
-                        <Text style={styles.sectionHeader}>
-                            {section.title}
-                        </Text>
-                    }
-                    keyExtractor={(item, index) => index}
+            <View style={styles.view}>
+                { this.getTitle() }
+                <FlatList
+                onRefresh={this.fetchMenusList.bind(this)}
+                refreshing={this.state.refreshing}
+                data={this.state.menus}
+                renderItem= {({item}) => 
+                    <Menu 
+                    menu={item}
+                    selections={cart.selections.filter(sel => sel.menu.id === item.id)}
+                    />
+                }
+                keyExtractor={(item, index) => item.descr}
                 />
             </View>
         );

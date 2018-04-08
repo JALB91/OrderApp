@@ -13,9 +13,9 @@ import Order from '../../components/Order';
 import user from '../../models/user';
 import cart from '../../models/cart';
 import utils from '../../utils';
+import timeslots from '../../models/timeslots';
 import * as api from '../../utils/api';
 import styles from './styles';
-import timeslots from '../../models/timeslots';
 
 
 export default class CartScreen extends Component {
@@ -55,7 +55,7 @@ export default class CartScreen extends Component {
     }
 
     order() {
-        this.setState({ loading: true });
+        this.setState({loading: true});
         const products = [];
         const menus = [];
         this.state.productsData.forEach(product => {
@@ -69,23 +69,21 @@ export default class CartScreen extends Component {
         api.putOrder(user.user_id, timeslots.data[this.state.timeslot].descr, products, menus)
         .then(result => {
             cart.removeAll();
-            this.setState({ loading: false, productsData: [], menusData: [] });
+            this.setState({loading: false, productsData: [], menusData: []});
         })
         .catch(reason => {
-            this.setState({ loading: false });
+            this.setState({loading: false});
         });
     }
 
-    renderItem(item) {
+    renderTimeslot(timeslot) {
         return (
             <Button
-                style={{ flex: 1 }}
-                onPress={() => this.setState({ pickTimeslot: false, timeslot: timeslots.data.indexOf(item) })}
-            >
-                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                    {item.descr}
-                </Text>
-            </Button>
+            text={timeslot.descr}
+            style={{flex: 1}}
+            textStyle={{fontWeight: 'bold', fontSize: 18}}
+            onPress={() => this.setState({pickTimeslot: false, timeslot: timeslots.data.indexOf(timeslot)})}
+            />
         );
     }
 
@@ -95,8 +93,8 @@ export default class CartScreen extends Component {
                 <View style={{ flex: 1, padding: 25, justifyContent: 'center', alignContent: 'center' }}>
                     <FlatList
                         data={timeslots.data}
-                        renderItem={({ item }) => this.renderItem(item)}
                         keyExtractor={(item, index) => item.descr}
+                        renderItem={({ item }) => this.renderTimeslot(item)}
                     />
                 </View>
             </Modal>
@@ -116,7 +114,7 @@ export default class CartScreen extends Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
+            <View style={styles.view}>
                 {utils.renderif(this.state.loading, <Loading />)}
                 <Order order={{products: this.state.productsData, selections: this.state.selectionsData, descr: timeslots.data[this.state.timeslot].descr}} />
                 {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, <Button onPress={()=>this.setState({pickTimeslot: true})} text='Timeslots' />)}

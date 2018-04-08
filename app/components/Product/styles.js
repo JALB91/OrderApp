@@ -1,51 +1,53 @@
 import { StyleSheet } from 'react-native';
+import styles from '../../styles';
 
 export default StyleSheet.create({
-    container: {
+    newImage: {
+        position: 'absolute',
+        top: - 5,
+        left: - 10,
+        width: 20,
+        height: 20
+    },
+    checkBox: {
         flex: 1,
-        paddingTop: 22
+        padding: 10
     },
-
-    sectionHeader: {
-        paddingTop: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingBottom: 5,
-        backgroundColor: 'rgba(247,247,247,1.0)',
-        borderColor: 'rgba(255,255,255,1.0)',
-        borderWidth: 1
+    text: {
+        color: styles.textsColor,
+        padding: 10,
+        fontSize: 14
     },
-
-    sectionTitle: {
-        fontSize: 14,
-        fontWeight: 'bold'
+    star: {
+        width: 25,
+        height: 25,
+        marginTop: 12.5 
     },
-
+    starButton: {
+        borderWidth: 0,
+        margin: 0,
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+        backgroundColor: 'rgba(0,0,0,0)'
+    },
+    itemImage: {
+        marginLeft: 10,
+        borderColor: styles.bordersColor,
+        borderWidth: styles.bordersWidth,
+        borderRadius: 5,
+        width: 50,
+        height: 50
+    },
     itemContainer: {
-        marginTop: 1,
-        marginLeft: 0.5,
-        marginRight: 0.5,
+        margin: 2.5,
         padding: 10,
         flex: 3,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderTopWidth: 1,
-        borderColor: 'rgba(100, 100, 100, 1.0)'
-    },
-
-    itemButton: {
-        width: 30,
-        height: 30,
-        margin: 2.5,
-        backgroundColor: 'rgba(220, 220, 220, 1.0)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 2
-    },
-
-    item: {
-        padding: 10,
-        fontSize: 14
+        borderWidth: styles.bordersWidth,
+        borderColor: styles.bordersColor,
+        borderRadius: 5,
+        backgroundColor: styles.terziaryColor
     }
 });

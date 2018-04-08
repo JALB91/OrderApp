@@ -9,8 +9,8 @@ import Counter from '../Counter';
 import Button from '../Button';
 import cart from '../../models/cart';
 import utils from '../../utils';
-import styles from './styles';
 import user from '../../models/user';
+import styles from './styles';
 
 export default class Product extends Component {
     constructor(props) {
@@ -21,7 +21,7 @@ export default class Product extends Component {
         return (
             <Image
             source = {require('../../../assets/new-256.png')}
-            style ={{ position: 'absolute', top: - 5, left: - 10, width: 20, height: 20 }}
+            style ={styles.newImage}
             />
         )
     }
@@ -41,9 +41,9 @@ export default class Product extends Component {
     getCheckBox() {
         return (
             <CheckBox
-            style={{flex: 1, padding: 10}}
-            onClick={this.props.toggleSelect || (() => {})}
+            style={styles.checkBox}
             isChecked={this.props.selected}
+            onClick={this.props.toggleSelect || (() => {})}
             />
         )
     }
@@ -62,7 +62,8 @@ export default class Product extends Component {
                 <View style= {{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }}>
                     <Button 
                     imgUri={user.isProductFavourite(this.props.product.id) ? require('../../../assets/star_full.png') : require('../../../assets/star_empty.png')}
-                    imgStyle={{ width: 25, height: 25, marginTop: 12.5 }} 
+                    imgStyle={styles.star}
+                    style={styles.starButton}
                     onPress={() => {
                         if (!user.isProductFavourite(this.props.product.id)) {
                             this.addToFavourites();
@@ -72,12 +73,15 @@ export default class Product extends Component {
                         this.forceUpdate();
                     }}
                     />
-                    <Image source={{ uri: this.props.product.getImageUri() }} style={{ width: 50, height: 50 }} />
+                    <Image
+                    source={{ uri: this.props.product.getImageUri() }}
+                    style={styles.itemImage}
+                    />
                     { utils.renderif(this.props.product.isNew, this.getNewImage()) }
-                    <Text style={styles.item}> {this.props.product.descr} </Text>
+                    <Text style={styles.text}> {this.props.product.descr} </Text>
                 </View>
                 <View style={{ flex: 2, flexDirection: 'row', justifyContent: 'center' }}>
-                    <Text style={styles.item}> ${this.props.product.price} </Text>
+                    <Text style={styles.text}> ${this.props.product.price} </Text>
                 </View>
                 { utils.renderif(this.props.countMode, this.getCounter()) }
                 { utils.renderif(this.props.selectMode, this.getCheckBox()) }

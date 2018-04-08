@@ -55,23 +55,23 @@ export default class AccountScreen extends Component {
 
     getLogoutView() {
         return (
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', alignContent: 'center'}}>
+            <View>
                 <TextInput
                     style={styles.input}
                     multiline={false}
-                    onChangeText={text => this.setState({ 'oldPassword': text })}
+                    onChangeText={text => this.setState({oldPassword: text})}
                     placeholder='Old Password'
                     secureTextEntry={true}
                 />
                 <TextInput
                     style={styles.input}
                     multiline={false}
-                    onChangeText={text => this.setState({ 'newPassword': text })}
+                    onChangeText={text => this.setState({newPassword: text})}
                     placeholder='New Password'
                     secureTextEntry={true}
                 />
                 <Button
-                    onPress={() => this.setState({ changePassword: false, warning: '', newPassword: '', oldPassword: '' })}
+                    onPress={() => this.setState({changePassword: false, warning: '', newPassword: '', oldPassword: ''})}
                     text='Back'
                 />
                 <Button
@@ -85,7 +85,7 @@ export default class AccountScreen extends Component {
 
     getWarningMessage() {
         return (
-            <Text style={{ fontWeight: 'bold', fontSize: 18, color: 'rgba(255, 0, 0, 1.0)' }}>
+            <Text style={styles.warning}>
                 {this.state.warning}
             </Text>
         );
@@ -102,6 +102,7 @@ export default class AccountScreen extends Component {
         } else {
             this.state.warning = '';
         }
+        // this.setState({warning: this.state.warning});
         return (
             <View style={{flex: 1, alignContent: 'center', justifyContent: 'center', alignItems: 'center'}}>
                 {utils.renderif(!this.state.loading && this.state.warning.length, this.getWarningMessage())}

@@ -14,6 +14,7 @@ export default class OrdersScreen extends Component {
         super(props);
 
         this.state = {
+            loading: true,
             data: []
         }
     }
@@ -34,9 +35,11 @@ export default class OrdersScreen extends Component {
         api.getLastOrdersList(user.user_id)
         .then(result => {
             this.updateOrdersList(result);
+            this.setState({loading: false});
         })
         .catch(reason => {
             console.warn(reason);
+            this.setState({loading: false});
         });
     }
 
@@ -57,8 +60,10 @@ export default class OrdersScreen extends Component {
             <View style={{flex: 1}}>
                 <FlatList
                 data={this.state.data}
-                renderItem={({item}) => this.renderOrder(item)}
                 keyExtractor={(item, index) => item.id}
+                refreshing={this.state.loading}
+                onRefresh={this.fetchOrdersList.bind(this)}
+                renderItem={({item}) => this.renderOrder(item)}
                 />
             </View>
         );

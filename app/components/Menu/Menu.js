@@ -7,12 +7,12 @@ import {
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Button from '../Button';
-import styles from './styles';
 import Product from '../Product';
 import Selection from '../Selection';
 import selection from '../../models/selection';
 import cart from '../../models/cart';
 import utils from '../../utils';
+import styles from './styles';
 
 class Menu extends Component {
     constructor(props) {
@@ -46,7 +46,7 @@ class Menu extends Component {
         return (
             <View>
                 <Button
-                style={styles.itemButton}
+                style={styles.addButton}
                 onPress={this.addSelection.bind(this)}
                 text='+'
                 />
@@ -56,8 +56,8 @@ class Menu extends Component {
 
     getMenuItem() {
         return (
-            <View style={styles.itemContainer}>
-                <View style= {{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }}>
+            <View style={styles.menuContainer}>
+                <View style={styles.menuInfoContainer}>
                     <Button
                     imgUri={{ uri: this.props.menu.getImageUri() }}
                     imgStyle={{ width: 50, height: 50 }}

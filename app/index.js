@@ -7,6 +7,7 @@ import OrdersScreen from './screens/OrdersScreen';
 import AccountScreen from './screens/AccountScreen';
 import CartScreen from './screens/CartScreen';
 import SelectionScreen from './screens/SelectionScreen';
+import styles from './styles';
 
 const Navigator = StackNavigator({
     Home: HomeScreen,
@@ -19,9 +20,9 @@ const Navigator = StackNavigator({
 }, {
     navigationOptions: {
         headerStyle: {
-          backgroundColor: '#f4511e',
+          backgroundColor: styles.secondaryColor,
         },
-        headerTintColor: '#fff',
+        headerTintColor: styles.textsColor,
         headerTitleStyle: {
           fontWeight: 'bold',
         }

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {
     TouchableOpacity,
-    Text,
-    Image
+    Image,
+    Text
 } from 'react-native';
 import PropTypes from 'prop-types';
 import utils from '../../utils';
@@ -15,7 +15,7 @@ export default class Button extends Component {
 
     getText() {
         return (
-            <Text style={this.props.textStyle}>
+            <Text style={[styles.text, this.props.textStyle]}>
                 {this.props.text}
             </Text>
         )
@@ -32,7 +32,10 @@ export default class Button extends Component {
 
     render() {
         return (
-            <TouchableOpacity style= {this.props.style} onPress= {this.props.enabled ? this.props.onPress : null}>
+            <TouchableOpacity 
+            style={[styles.button, this.props.style]}
+            onPress={this.props.enabled ? this.props.onPress : null}
+            >
                 { utils.renderif(this.props.text, this.getText()) }
                 { utils.renderif(this.props.imgUri, this.getImage())}
                 { this.props.children }

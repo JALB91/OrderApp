@@ -10,11 +10,11 @@ import {
 import Product from '../../components/Product';
 import Button from '../../components/Button';
 import Cart from '../../components/Cart';
-import styles from './styles';
 import utils from '../../utils';
 import cart from '../../models/cart';
 import user from '../../models/user';
 import * as api from '../../utils/api';
+import styles from './styles';
 
 export default class ProductsScreen extends Component {
     constructor(props) {
@@ -84,7 +84,7 @@ export default class ProductsScreen extends Component {
     isItemActive(item) {
         let isActive = true;
 
-        if (this.state.activeFilter === 1) {    // News filter
+        if (this.state.activeFilter === 1) {    // Favourite filter
             isActive = user.isProductFavourite(item.id);
         }
         else if (this.state.activeFilter === 2) {    // News filter
@@ -125,7 +125,7 @@ export default class ProductsScreen extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={styles.view}>
                 {this.getFilter()}
                 <SectionList
                     onRefresh={this.fetchProductsList.bind(this)}
@@ -136,7 +136,6 @@ export default class ProductsScreen extends Component {
                         <Button 
                         style={styles.sectionHeader}
                         text={section.title}
-                        textStyle={styles.titleStyle}
                         onPress={() => {
                             section.active = !section.active;
                             this.setState(this.state);

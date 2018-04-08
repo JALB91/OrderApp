@@ -4,10 +4,11 @@ import {
     Text,
     Image
 } from 'react-native';
+import { EventRegister as Event } from 'react-native-event-listeners'
 import Button from '../Button';
 import cart from '../../models/cart';
 import utils from '../../utils';
-import { EventRegister as Event } from 'react-native-event-listeners'
+import styles from './styles';
 
 export default class Cart extends Component {
     constructor(props) {
@@ -36,8 +37,8 @@ export default class Cart extends Component {
 
     getBadge() {
         return (
-            <View style={{width: 10, height: 10, borderRadius: 5, backgroundColor: 'red', alignContent: 'center', alignItems: 'center'}}>
-                <Text style={{ fontWeight: 'bold', fontSize: 8, color: 'white' }}>
+            <View style={styles.badgeView}>
+                <Text style={styles.badgeText}>
                     { this.state.total }
                 </Text>
             </View>
@@ -46,11 +47,12 @@ export default class Cart extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, padding: 15, alignItems: 'center', alignContent: 'center' }}>
-                { utils.renderif(this.state.total > 0, this.getBadge()) }
+            <View style={styles.view}>
+                { this.getBadge() }
                 <Button
                 imgUri={require('../../../assets/cart.png')}
-                imgStyle={{ width: 25, height: 25 }}
+                imgStyle={styles.cartImage}
+                style={styles.cartButton}
                 onPress={this.props.onPress}
                 />
             </View>

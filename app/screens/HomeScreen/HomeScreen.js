@@ -82,17 +82,16 @@ export default class HomeScreen extends Component {
     getButton(name) {
         return (
             <Button
+            text = {name}
             style = {styles.button}
-            onPress = {() => this.props.navigation.navigate(name)} 
-            text = {name} 
-            textStyle = {{ fontSize: 18 }}
+            onPress = {() => this.props.navigation.navigate(name)}
             />
         )
     }
   
     render() {
         return (
-            <View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
+            <View style ={styles.view}>
                 { utils.renderif(!this.state.ready, <Loading />) }
                 { utils.renderif(this.state.ready && !this.state.logged, <Login onLogin={this.login.bind(this)} />) }
                 { utils.renderif(this.state.logged, this.getButton('Products')) }

@@ -1,19 +1,23 @@
 import { StyleSheet } from 'react-native';
+import styles from '../../styles';
 
 export default StyleSheet.create({
-    container: {
-        flex: 1
+    view: StyleSheet.flatten([styles.mainView, {
+        justifyContent: 'flex-start',
+        alignItems: 'stretch'
+    }]),
+    titleContainer: {
+        alignItems: 'center',
+        backgroundColor: styles.secondaryColor,
+        borderColor: styles.bordersColor,
+        borderWidth: styles.bordersWidth,
+        justifyContent: 'center',
+        alignContent: 'center'
     },
-
-    sectionHeader: {
-        paddingTop: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingBottom: 5,
-        fontSize: 18,
+    title: {
+        padding: 5,
+        color: styles.textsColor,
         fontWeight: 'bold',
-        backgroundColor: 'rgba(247,247,247,1.0)',
-        borderColor: 'rgba(255,255,255,1.0)',
-        borderWidth: 1
+        fontSize: 18
     }
 });

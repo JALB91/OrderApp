@@ -35,8 +35,8 @@ export default class Counter extends Component {
     getRemoveButton() {
         return (
             <Button
-            style= {styles.itemButton}
             text= '-'
+            style= {styles.button}
             onPress= {this.remove.bind(this)}
             />
         );
@@ -45,8 +45,8 @@ export default class Counter extends Component {
     getAddButton() {
         return (
             <Button
-            style= {styles.itemButton}
             text= '+'
+            style= {styles.button}
             onPress= {this.add.bind(this)}
             />
         );
@@ -54,8 +54,8 @@ export default class Counter extends Component {
 
     render() {
         return (
-            <View style= {{ flex: 0.25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <Text> {this.state.quantity} </Text>
+            <View style= {styles.view}>
+                <Text style={styles.counter}> {this.state.quantity} </Text>
                 { utils.renderif(this.props.canIncrease, this.getRemoveButton())}
                 { utils.renderif(this.props.canDecrease, this.getAddButton())}
             </View>
