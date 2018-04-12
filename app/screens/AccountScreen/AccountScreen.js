@@ -44,7 +44,7 @@ export default class AccountScreen extends Component {
         });
     }
 
-    getLogoutButton() {
+    getChangePasswordButton() {
         return (
             <Button
                 onPress={() => this.setState({ changePassword: true })}
@@ -53,7 +53,7 @@ export default class AccountScreen extends Component {
         );
     }
 
-    getLogoutView() {
+    getChangePasswordView() {
         return (
             <View>
                 <TextInput
@@ -83,6 +83,22 @@ export default class AccountScreen extends Component {
         );
     }
 
+    getLogoutButton() {
+        return (
+            <Button
+                onPress={() => {
+                    user.logout();
+                    const resetAction = NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({ routeName: 'Home' })],
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                }}
+                text='Logout'
+            />
+        )
+    }
+
     getWarningMessage() {
         return (
             <Text style={styles.warning}>
@@ -106,8 +122,9 @@ export default class AccountScreen extends Component {
         return (
             <View style={styles.view}>
                 {utils.renderif(!this.state.loading && this.state.warning.length, this.getWarningMessage())}
+                {utils.renderif(this.state.changePassword, this.getChangePasswordView())}
+                {utils.renderif(!this.state.changePassword, this.getChangePasswordButton())}
                 {utils.renderif(!this.state.changePassword, this.getLogoutButton())}
-                {utils.renderif(this.state.changePassword, this.getLogoutView())}
                 {utils.renderif(this.state.loading, <Loading />)}
             </View>
         )

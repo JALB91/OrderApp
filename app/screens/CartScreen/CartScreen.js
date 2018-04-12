@@ -53,6 +53,14 @@ export default class CartScreen extends Component {
         }
     }
 
+    canOrder() {
+        return timeslots.data.length;
+    }
+
+    getTimeslotDescr() {
+        return this.canOrder() && cart.getTotal() ? timeslots.data[this.state.timeslot].descr : '';
+    }
+
     order() {
         this.setState({loading: true});
         const products = [];
@@ -117,7 +125,7 @@ export default class CartScreen extends Component {
         return (
             <View style={styles.view}>
                 {utils.renderif(this.state.loading, <Loading />)}
-                <Order order={{products: this.state.productsData, selections: this.state.selectionsData, descr: timeslots.data[this.state.timeslot].descr}} />
+                {utils.renderif(this.canOrder(), <Order order={{products: this.state.productsData, selections: this.state.selectionsData, descr: this.getTimeslotDescr()}} />)}
                 {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, <Button onPress={()=>this.setState({pickTimeslot: true})} text='Timeslots' />)}
                 {this.getTimeslotsPicker()}
                 {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, this.getOrderButton())}

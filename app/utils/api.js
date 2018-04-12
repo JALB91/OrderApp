@@ -110,7 +110,7 @@ export async function login(username, password) {
 
     try {
         const result = await call(headers, xmlBody);
-        return result['soap:Envelope']['soap:Body']['loginResponse']['loginResult']['N_ID']['_text'];
+        return result['soap:Envelope']['soap:Body']['loginResponse']['loginResult'];
     } catch(e) {
         console.warn(e);
         return 0;
