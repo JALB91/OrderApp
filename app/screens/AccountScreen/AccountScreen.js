@@ -104,7 +104,7 @@ export default class AccountScreen extends Component {
         }
         // this.setState({warning: this.state.warning});
         return (
-            <View style={{flex: 1, alignContent: 'center', justifyContent: 'center', alignItems: 'center'}}>
+            <View style={styles.view}>
                 {utils.renderif(!this.state.loading && this.state.warning.length, this.getWarningMessage())}
                 {utils.renderif(!this.state.changePassword, this.getLogoutButton())}
                 {utils.renderif(this.state.changePassword, this.getLogoutView())}

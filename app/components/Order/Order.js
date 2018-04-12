@@ -3,15 +3,14 @@ import {
     View,
     Text,
     SectionList,
-    FlatList,
     Modal
 } from 'react-native';
 import Button from '../Button';
 import Product from '../Product';
 import Menu from '../Menu';
 import utils from '../../utils';
-import styles from './styles';
 import timeslots from '../../models/timeslots';
+import styles from './styles';
 
 export default class Order extends Component {
     constructor(props) {
@@ -77,7 +76,7 @@ export default class Order extends Component {
 
     getTimeslot() {
         return (
-            <Text style={{flex: 1}}>
+            <Text style={styles.timeslotText}>
                 {this.props.order.descr}
             </Text>
         );
@@ -85,12 +84,10 @@ export default class Order extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, paddingTop: 20 }}>
+            <View style={styles.view}>
                 <SectionList
                     sections={this.state.sections}
-                    renderItem={({ item }) =>
-                        utils.renderif(this.isItemActive(item), this.renderItem(item))
-                    }
+                    renderItem={({ item }) => utils.renderif(this.isItemActive(item), this.renderItem(item))}
                     renderSectionHeader={({ section }) =>
                         <Button
                             textStyle={styles.titleStyle}
@@ -102,7 +99,7 @@ export default class Order extends Component {
                             }}
                         />
                     }
-                    keyExtractor={(item, index) => index}
+                    keyExtractor={(item, index) => `Ord_${index}`}
                 />
                 {this.getTimeslot()}
             </View>

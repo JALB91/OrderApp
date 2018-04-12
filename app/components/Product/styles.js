@@ -13,9 +13,20 @@ export default StyleSheet.create({
         flex: 1,
         padding: 10
     },
-    text: {
+    descr: {
+        paddingLeft: 5,
+        marginLeft: 5,
+        textAlign: 'left',
+        textAlignVertical: 'center',
         color: styles.textsColor,
-        padding: 10,
+        fontSize: 14,
+        alignSelf: 'center',
+        flex: 2
+    },
+    price: {
+        paddingLeft: 10,
+        marginLeft: 10,
+        color: styles.textsColor,
         fontSize: 14
     },
     star: {
@@ -27,10 +38,12 @@ export default StyleSheet.create({
         borderWidth: 0,
         margin: 0,
         alignItems: 'stretch',
+        alignSelf: 'center',
         justifyContent: 'flex-start',
         backgroundColor: 'rgba(0,0,0,0)'
     },
     itemImage: {
+        alignSelf: 'center',
         marginLeft: 10,
         borderColor: styles.bordersColor,
         borderWidth: styles.bordersWidth,
@@ -41,7 +54,7 @@ export default StyleSheet.create({
     itemContainer: {
         margin: 2.5,
         padding: 10,
-        flex: 3,
+        flex: 4,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -49,5 +62,23 @@ export default StyleSheet.create({
         borderColor: styles.bordersColor,
         borderRadius: 5,
         backgroundColor: styles.terziaryColor
+    },
+    infoContainer: {
+        flex: 2,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        alignContent: 'stretch'
+    },
+    priceContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    propertyContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end'
     }
 });

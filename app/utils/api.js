@@ -137,11 +137,31 @@ export async function changePassword(user_id, username, oldPassword, newPassword
     }
 }
 
-export async function putOrder(user_id, ts_descr, products, menus) {
+export async function putOrder(user_id, ts_descr, products = null, menus = null) {
     const requestType = 'put_ordine';
 
+    const params = {
+        'n_id_account': user_id,
+        'c_fascia_oraria_descri': ts_descr
+    };
+
+    if (products.length) {
+        const productsData = [];
+        products.forEach(product => 
+            productsData.push(product)
+        );
+        params['lista_prodotti_selezionati']= {'Prodotto_selezionato': productsData};
+    }
+    if (menus.length) {
+        const menusData = [];
+        menus.forEach(menu => 
+            menusData.push(menu)
+        );
+        params['lista_menu_selezionati'] = {'Menu_selezionato': menusData};
+    }
+
     const headers = getHeadersForRequestType(requestType);
-    const body = getBodyForRequestType(requestType, {'n_id_account': user_id, 'c_fascia_oraria_descri': ts_descr, 'lista_prodotti_selezionati': products, 'lista_menu_selezionati': menus});
+    const body = getBodyForRequestType(requestType, params);
 
     const options = {ignoreComment: true, spaces: 4, compact: true};
     const xmlBody = convert.js2xml(body, options);

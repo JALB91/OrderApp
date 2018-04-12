@@ -67,15 +67,13 @@ export default class MenusScreen extends Component {
         })
         .catch(reason => {
             console.warn(reason);
+            this.setState({refreshing: false});
         });
     }
 
     updateMenusList(menus) {
         cart.menus = menus;
-        menus.forEach(menu => {
-            this.state.menus.push(menu);
-        });
-        this.setState({menus: this.state.menus, refreshing: false});
+        this.setState({menus: menus, refreshing: false});
     }
 
     getTitle() {
@@ -102,7 +100,7 @@ export default class MenusScreen extends Component {
                     selections={cart.selections.filter(sel => sel.menu.id === item.id)}
                     />
                 }
-                keyExtractor={(item, index) => item.descr}
+                keyExtractor={(item, index) => `MenuSc_${item.descr}`}
                 />
             </View>
         );

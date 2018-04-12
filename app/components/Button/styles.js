@@ -10,7 +10,8 @@ export default StyleSheet.create({
         borderStyle: 'solid',
         alignItems: 'center',
         borderRadius: 5.0,
-        margin: 10
+        margin: 10,
+        padding: 5
     },
     text: {
         color: styles.textsColor,

@@ -8,6 +8,7 @@ import { StackNavigator } from 'react-navigation';
 import Order from '../../components/Order';
 import user from '../../models/user';
 import * as api from '../../utils/api';
+import styles from './styles';
 
 export default class OrdersScreen extends Component {
     constructor(props) {
@@ -49,7 +50,7 @@ export default class OrdersScreen extends Component {
 
     renderOrder(order) {
         return (
-            <View style={{flex: 1, alignContent: 'center', padding: 5, margin: 5, borderWidth: 5, borderRadius: 5, borderColor: 'rgba(0,0,0,1.0)'}}>
+            <View style={styles.orderContainer}>
                 <Order order={order} />
             </View>
         )
@@ -57,10 +58,10 @@ export default class OrdersScreen extends Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
+            <View style={styles.view}>
                 <FlatList
                 data={this.state.data}
-                keyExtractor={(item, index) => item.id}
+                keyExtractor={(item, index) => `OrdSc_${item.id}`}
                 refreshing={this.state.loading}
                 onRefresh={this.fetchOrdersList.bind(this)}
                 renderItem={({item}) => this.renderOrder(item)}

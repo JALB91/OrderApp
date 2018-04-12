@@ -1,23 +1,31 @@
 import { StyleSheet } from 'react-native';
+import styles from '../../styles';
 
 export default StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 22
+    view: {
+        flex: 1
     },
-
     sectionHeader: {
         paddingTop: 5,
         paddingLeft: 10,
         paddingRight: 10,
         paddingBottom: 5,
-        backgroundColor: 'rgba(247,247,247,1.0)',
-        borderColor: 'rgba(255,255,255,1.0)',
-        borderWidth: 1
+        backgroundColor: styles.terziaryColor,
+        borderColor: styles.bordersColor,
+        borderWidth: styles.bordersWidth
     },
-
     sectionTitle: {
         fontSize: 14,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: styles.textsColor
+    },
+    timeslotText: {
+        alignSelf: 'center',
+        flex: 1,
+        margin: 10,
+        padding: 5,
+        color: styles.textsColor,
+        fontWeight: 'bold',
+        fontSize: 14
     }
 });

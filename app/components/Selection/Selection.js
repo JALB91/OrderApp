@@ -83,15 +83,13 @@ export default class Selection extends Component {
 
     renderItem(item) {
         return (
-            <View>
-                <Product
-                product={item}
-                countMode={false}
-                selectMode={this.props.canSelect}
-                toggleSelect={() => this.toggleItem(item)}
-                selected={item.isSelected}
-                />
-            </View>
+            <Product
+            product={item}
+            countMode={false}
+            selectMode={this.props.canSelect}
+            toggleSelect={() => this.toggleItem(item)}
+            selected={item.isSelected}
+            />
         );
     }
 
@@ -101,14 +99,14 @@ export default class Selection extends Component {
             sections={this.state.sections}
             renderItem= {({item}) => this.renderItem(item)}
             renderSectionHeader={({section}) => this.renderHeader(section)}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => `Sel_${index}`}
             />
         );
     }
 
     getButtons() {
         return (
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={styles.buttons}>
                 <Button
                 text='Modify'
                 onPress={this.props.onModify}
@@ -123,7 +121,7 @@ export default class Selection extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.view}>
                 { utils.renderif(this.props.canRemove, this.getButtons()) }
                 { this.getProducts() }  
             </View>

@@ -30,6 +30,7 @@ class Menu extends Component {
     }
 
     removeSelection(selection) {
+        this.props.selections.splice(this.props.selections.indexOf(selection), 1);
         cart.removeSelection(selection);
         this.forceUpdate();
     }
@@ -44,13 +45,11 @@ class Menu extends Component {
 
     getAddButton() {
         return (
-            <View>
-                <Button
-                style={styles.addButton}
-                onPress={this.addSelection.bind(this)}
-                text='+'
-                />
-            </View>
+            <Button
+            style={styles.addButton}
+            onPress={this.addSelection.bind(this)}
+            text='+'
+            />
         );
     }
 
@@ -59,16 +58,16 @@ class Menu extends Component {
             <View style={styles.menuContainer}>
                 <View style={styles.menuInfoContainer}>
                     <Button
+                    imgStyle={styles.image}
                     imgUri={{ uri: this.props.menu.getImageUri() }}
-                    imgStyle={{ width: 50, height: 50 }}
                     onPress={() => this.setState({selected: !this.state.selected})}
                     />
-                    <Text style= {styles.item}>
+                    <Text style={[styles.texts, styles.description]}>
                         {this.props.menu.descr}
                     </Text>
                 </View>
-                <View style= {{ flex: 2, flexDirection: 'row', justifyContent: 'center' }}>
-                    <Text style= {styles.item}> ${this.props.menu.price} </Text>
+                <View style={styles.priceContainer}>
+                    <Text style={[styles.texts, {padding: 10}]}> ${this.props.menu.price} </Text>
                 </View>
                 { utils.renderif(this.props.canAdd, this.getAddButton()) }
             </View>
@@ -80,8 +79,8 @@ class Menu extends Component {
             <View>
                 <FlatList
                 data={this.props.menu.products}
-                renderItem={({item}) => <Text> {item.descr} </Text>}
-                keyExtractor={(item, index) => item.id.toString()}
+                renderItem={({item}) => <Text style={[styles.texts, {padding: 2.5}]}> {item.descr} </Text>}
+                keyExtractor={(item, index) => `Menu_Prod_${item.id.toString()}`}
                 />
             </View>
         );
@@ -104,7 +103,7 @@ class Menu extends Component {
                 <FlatList
                 data={this.props.selections}
                 renderItem={({item}) => this.renderSelection(item)}
-                keyExtractor={(item, index) => item.cart_id.toString()}
+                keyExtractor={(item, index) => `Menu_Sel_${item.cart_id.toString()}`}
                 />
             </View>
         )
@@ -112,7 +111,7 @@ class Menu extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.view}>
                 { this.getMenuItem() }
                 { utils.renderif(this.state.selected, this.getProducts()) }
                 { utils.renderif(this.props.selections.length, this.getSelections()) }

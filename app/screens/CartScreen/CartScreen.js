@@ -3,7 +3,6 @@ import {
     Platform,
     Text,
     View,
-    SectionList,
     Modal,
     FlatList
 } from 'react-native';
@@ -70,8 +69,10 @@ export default class CartScreen extends Component {
         .then(result => {
             cart.removeAll();
             this.setState({loading: false, productsData: [], menusData: []});
+            this.props.navigation.popToTop();
         })
         .catch(reason => {
+            console.warn(reason);
             this.setState({loading: false});
         });
     }
@@ -93,7 +94,7 @@ export default class CartScreen extends Component {
                 <View style={{ flex: 1, padding: 25, justifyContent: 'center', alignContent: 'center' }}>
                     <FlatList
                         data={timeslots.data}
-                        keyExtractor={(item, index) => item.descr}
+                        keyExtractor={(item, index) => `Cart_${item.descr}`}
                         renderItem={({ item }) => this.renderTimeslot(item)}
                     />
                 </View>

@@ -18,21 +18,33 @@ export default class order {
         this.products = [];
 
         if (xml.hasOwnProperty('lista_prodotti_ordinati') && xml['lista_prodotti_ordinati'].hasOwnProperty('Prodotto')) {
-            xml.lista_prodotti_ordinati.Prodotto.forEach(element => {
-                this.products.push(new product(element));
-            });
+            if (xml['lista_prodotti_ordinati']['Prodotto'] instanceof Array) {
+                xml['lista_prodotti_ordinati']['Prodotto'].forEach(element => {
+                    this.products.push(new product(element));
+                });
+            } else {
+                this.products.push(new product(xml['lista_prodotti_ordinati']['Prodotto']));
+            }
         }
 
         this.selections = [];
 
         if (xml.hasOwnProperty('lista_menu_ordinati') && xml['lista_menu_ordinati'].hasOwnProperty('Menu')) {
-            xml.lista_menu_ordinati.Menu.forEach(element => {
-                const selected = [];
-                element['lista_menu_prod'].forEach(prod => {
-                    selected.push(new product(prod.prod));
+            if (xml['lista_menu_ordinati']['Menu'] instanceof Array) {
+                xml['lista_menu_ordinati']['Menu'].forEach(element => {
+                    const selected = [];
+                    element['lista_menu_prod'].forEach(prod => {
+                        selected.push(new product(prod.prod));
+                    });
+                    this.selections.push(new selection({xml: element}, selected));
                 });
-                this.selections.push(new selection({xml: element}, selected));
-            });
+            } else {
+                const selected = [];
+                xml['lista_menu_ordinati']['Menu']['lista_menu_prod'].forEach(prod => 
+                    selected.push(new product(prod.prod))
+                );
+                this.selections.push(new selection({xml: xml['lista_menu_ordinati']['Menu']['lista_menu_prod']}, selected));
+            }
         }
     }
 }

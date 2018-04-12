@@ -142,7 +142,7 @@ export default class ProductsScreen extends Component {
                         }}
                         />
                     }
-                    keyExtractor={(item, index) => index}
+                    keyExtractor={(item, index) => `ProdSc_${index}`}
                 />
             </View>
         );
