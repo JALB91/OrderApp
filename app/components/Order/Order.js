@@ -17,6 +17,7 @@ export default class Order extends Component {
         super(props);
 
         const productsData = [];
+        this.total = 0;
 
         this.props.order.products.forEach(product => {
             const item = productsData.find(prod => prod.id === product.id);
@@ -26,6 +27,11 @@ export default class Order extends Component {
                 product.quantity = 1;
                 productsData.push(product);
             }
+            this.total += product.price;
+        });
+
+        this.props.order.selections.forEach(selection => {
+            this.total += selection.menu.price;
         });
 
         this.state = {
@@ -82,26 +88,45 @@ export default class Order extends Component {
         );
     }
 
+    getTotal() {
+        return (
+            <Text style={styles.totalText}>
+                Total: ${this.total}
+            </Text>
+        );
+    }
+
+    getBottomBar() {
+        return (
+            <View style={styles.bottomContainer}>
+                {this.getTimeslot()}
+                {this.getTotal()}
+            </View>
+        );
+    }
+
     render() {
         return (
             <View style={styles.view}>
-                <SectionList
-                    sections={this.state.sections}
-                    renderItem={({ item }) => utils.renderif(this.isItemActive(item), this.renderItem(item))}
-                    renderSectionHeader={({ section }) =>
-                        <Button
-                            textStyle={styles.titleStyle}
-                            style={styles.sectionHeader}
-                            text={section.title}
-                            onPress={() => {
-                                section.active = !section.active;
-                                this.setState(this.state);
-                            }}
-                        />
-                    }
-                    keyExtractor={(item, index) => `Ord_${index}`}
-                />
-                {this.getTimeslot()}
+                <View style={{flex: 1}}>
+                    <SectionList
+                        sections={this.state.sections}
+                        renderItem={({ item }) => utils.renderif(this.isItemActive(item), this.renderItem(item))}
+                        renderSectionHeader={({ section }) =>
+                            <Button
+                                textStyle={styles.titleStyle}
+                                style={styles.sectionHeader}
+                                text={section.title}
+                                onPress={() => {
+                                    section.active = !section.active;
+                                    this.setState(this.state);
+                                }}
+                            />
+                        }
+                        keyExtractor={(item, index) => `Ord_${index}`}
+                    />
+                </View>
+                {this.getBottomBar()}
             </View>
         )
     }

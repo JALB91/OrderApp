@@ -21,11 +21,22 @@ export default StyleSheet.create({
     },
     timeslotText: {
         alignSelf: 'center',
-        flex: 1,
         margin: 10,
         padding: 5,
         color: styles.textsColor,
         fontWeight: 'bold',
         fontSize: 14
+    },
+    totalText: {
+        alignSelf: 'center',
+        margin: 10,
+        padding: 5,
+        color: styles.textsColor,
+        fontWeight: 'bold',
+        fontSize: 14
+    },
+    bottomContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 });

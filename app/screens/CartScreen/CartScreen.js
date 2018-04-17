@@ -110,24 +110,41 @@ export default class CartScreen extends Component {
         )
     }
 
-    getOrderButton() {
+    getOrder() {
         return (
-            <View style={{flex: 1}}>
-                <Button
-                text='Order'
-                onPress={this.order.bind(this)}
+            <View style={styles.orderContainer}>
+                <Order 
+                order={{products: this.state.productsData, selections: this.state.selectionsData, descr: this.getTimeslotDescr()}} 
                 />
             </View>
+        );
+    }
+
+    getTimeslotsButton() {
+        return (
+            <Button 
+            onPress={()=>this.setState({pickTimeslot: true})} 
+            text='Timeslots' 
+            />
+        );
+    }
+
+    getOrderButton() {
+        return (
+            <Button
+            text='Order'
+            onPress={this.order.bind(this)}
+            />
         )
     }
 
     render() {
         return (
             <View style={styles.view}>
-                {utils.renderif(this.state.loading, <Loading />)}
-                {utils.renderif(this.canOrder(), <Order order={{products: this.state.productsData, selections: this.state.selectionsData, descr: this.getTimeslotDescr()}} />)}
-                {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, <Button onPress={()=>this.setState({pickTimeslot: true})} text='Timeslots' />)}
                 {this.getTimeslotsPicker()}
+                {utils.renderif(this.state.loading, <Loading />)}
+                {utils.renderif(this.canOrder(), this.getOrder())}
+                {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, this.getTimeslotsButton())}
                 {utils.renderif(this.state.productsData.length || this.state.selectionsData.length, this.getOrderButton())}
             </View>
         );
