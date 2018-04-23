@@ -19,6 +19,8 @@ import product from '../models/product';
 import menu from '../models/menu';
 import { timeslot } from '../models/timeslots';
 import order from '../models/order';
+import ordProduct from '../models/ordProduct';
+import ordAccount from '../models/ordAccount';
 const convert = require('xml-js');
 
 function getHeadersForRequestType(requestType) {
@@ -257,12 +259,114 @@ export async function getLastOrdersList(user_id) {
     const list = [];
 
     if (result instanceof Array) {
-        result.forEach(element => {
-            list.push(new order(element));
-        });
+        result.forEach(element => list.push(new order(element)));
     }
 
     return list;
+}
+
+export async function getOrdersListByProd() {
+    let result = await getList('ordini_di_oggi_per_prodotto');
+    result = result['soap:Envelope']['soap:Body']['get_lista_ordini_di_oggi_per_prodottoResponse']['get_lista_ordini_di_oggi_per_prodottoResult']['Prodotto_ordinato'];
+    
+    const list = [];
+
+    if (result instanceof Array) {
+        result.forEach(element => list.push(new ordProduct(element)));
+    } else {
+        list.push(new ordProduct(result));
+    }
+
+    return list;
+}
+
+export async function checkProduct(ordProduct) {
+    const requestType = 'check_lista_ordini_di_oggi_per_prodotto';
+
+    const params = {
+        'n_id_prodotto': ordProduct.id,
+        'n_qta': 1
+    };
+
+    const headers = getHeadersForRequestType(requestType);
+    const body = getBodyForRequestType(requestType, params);
+
+    const options = {ignoreComment: true, spaces: 4, compact: true};
+    const xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    const res = await call(headers, xmlBody);
+}
+
+export async function uncheckProduct(ordProduct) {
+    const requestType = 'uncheck_lista_ordini_di_oggi_per_prodotto';
+
+    const params = {
+        'n_id_prodotto': ordProduct.id,
+        'n_qta': 1
+    };
+
+    const headers = getHeadersForRequestType(requestType);
+    const body = getBodyForRequestType(requestType, params);
+
+    const options = {ignoreComment: true, spaces: 4, compact: true};
+    const xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    const res = await call(headers, xmlBody);
+}
+
+export async function getOrdersListByAcc() {
+    let result = await getList('ordini_di_oggi_per_account');
+    result = result['soap:Envelope']['soap:Body']['get_lista_ordini_di_oggi_per_accountResponse']['get_lista_ordini_di_oggi_per_accountResult']['Ordine_account'];
+    
+    const list = [];
+
+    if (result instanceof Array) {
+        result.forEach(element => list.push(new ordAccount(element)));
+    } else {
+        list.push(new ordAccount(result));
+    }
+
+    return list;
+}
+
+export async function checkOrderByIdOrder(orderId) {
+    const requestType = 'check_lista_ordini_di_oggi_per_account';
+
+    const params = {
+        'c_id_ordine': orderId
+    };
+
+    const headers = getHeadersForRequestType(requestType);
+    const body = getBodyForRequestType(requestType, params);
+
+    const options = {ignoreComment: true, spaces: 4, compact: true};
+    const xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    const res = await call(headers, xmlBody);
+}
+
+export async function uncheckOrderByIdOrder(orderId) {
+    const requestType = 'uncheck_lista_ordini_di_oggi_per_prodotto';
+
+    const params = {
+        'c_id_ordine': orderId
+    };
+
+    const headers = getHeadersForRequestType(requestType);
+    const body = getBodyForRequestType(requestType, params);
+
+    const options = {ignoreComment: true, spaces: 4, compact: true};
+    const xmlBody = convert.js2xml(body, options);
+
+    headers.append('Content-Length', xmlBody.length);
+
+    const res = await call(headers, xmlBody);
 }
 
 export async function getSuggestedProductsList(orders) {

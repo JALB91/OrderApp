@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StackNavigator } from 'react-navigation';
 import HomeScreen from './screens/HomeScreen';
+import AdminScreen from './screens/AdminScreen';
 import ProductsScreen from './screens/ProductsScreen';
 import MenusScreen from './screens/MenusScreen';
 import OrdersScreen from './screens/OrdersScreen';
@@ -11,6 +12,7 @@ import styles from './styles';
 
 const Navigator = StackNavigator({
     Home: HomeScreen,
+    Admin: AdminScreen,
     Products: ProductsScreen,
     Menus: MenusScreen,
     Orders: OrdersScreen,

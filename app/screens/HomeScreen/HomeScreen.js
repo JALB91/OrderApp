@@ -93,6 +93,7 @@ export default class HomeScreen extends Component {
             <View style ={styles.view}>
                 { utils.renderif(!this.state.ready, <Loading />) }
                 { utils.renderif(this.state.ready && !this.state.logged, <Login onLogin={this.login.bind(this)} />) }
+                { utils.renderif(user.isAdmin(), this.getButton('Admin')) }
                 { utils.renderif(this.state.logged, this.getButton('Products')) }
                 { utils.renderif(this.state.logged, this.getButton('Menus')) }
                 { utils.renderif(this.state.logged, this.getButton('Orders')) }
