@@ -4,7 +4,7 @@ import {
     Text,
     Image
 } from 'react-native';
-import CheckBox from 'react-native-check-box';
+import CheckBox from '../CheckBox';
 import Counter from '../Counter';
 import Button from '../Button';
 import cart from '../../models/cart';

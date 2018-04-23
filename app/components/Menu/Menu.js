@@ -79,6 +79,7 @@ class Menu extends Component {
             <View>
                 <FlatList
                 data={this.props.menu.products}
+                listKey={'list1'}
                 renderItem={({item}) => <Text style={[styles.texts, {padding: 2.5}]}> {item.descr} </Text>}
                 keyExtractor={(item, index) => `Menu_Prod_${item.id.toString()}`}
                 />

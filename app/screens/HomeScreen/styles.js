@@ -3,5 +3,5 @@ import styles from '../../styles';
 
 export default StyleSheet.create({
     view: styles.mainView,
-    button: { width: 150}
+    button: { width: 150 }
 });
